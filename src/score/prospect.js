@@ -17,6 +17,15 @@ const POIDS = {
   accessibilite: 10,
 };
 
+/**
+ * En mode rapide, les scores Lighthouse manquent et le bareme se reduit a deux
+ * criteres, ce qui tasse les sites sur une poignee de valeurs identiques. Or
+ * c'est justement le mode qui sert a trier. On ajoute donc le volume des
+ * constats non bloquants, disponible sans navigateur, pour retrouver du relief.
+ */
+const POIDS_AUTRES_PARTIEL = 20;
+const AUTRES_SATURATION = 10;
+
 /** Au dela de ce nombre de constats bloquants, le maximum est atteint. */
 const BLOQUANTS_SATURATION = 4;
 
@@ -62,10 +71,15 @@ export function prospectScore({ lh = null, consolidated = null }) {
     if (Number.isFinite(scores.accessibilite)) {
       detail.accessibilite = POIDS.accessibilite * (1 - scores.accessibilite);
     }
+  } else {
+    const autres = findings.filter((f) => f.tier !== TIERS.BLOQUANT).length;
+    detail.autres = POIDS_AUTRES_PARTIEL * Math.min(1, autres / AUTRES_SATURATION);
   }
 
   const brut = Object.values(detail).reduce((a, b) => a + b, 0);
-  const echelle = partiel ? POIDS.bloquants + POIDS.legal : 100;
+  const echelle = partiel
+    ? POIDS.bloquants + POIDS.legal + POIDS_AUTRES_PARTIEL
+    : 100;
   const score = Math.round((brut / echelle) * 100);
 
   return {

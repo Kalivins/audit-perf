@@ -39,6 +39,40 @@ program
     await runCheck(file, opts);
   });
 
+program
+  .command('scan')
+  .description('analyse une liste de sites et ecrit les resultats')
+  .argument('<fichier>', 'fichier CSV ou TXT de cibles')
+  .option('-o, --out <dossier>', 'dossier de sortie', './out')
+  .option('-q, --quick', 'phase HTTP seule, sans Lighthouse (balayage rapide)')
+  .option('-c, --concurrency <n>', 'sites analyses en parallele (phase HTTP)', '8')
+  .option(
+    '--lh-concurrency <n>',
+    'mesures Lighthouse en parallele. Au dela de 3 les temps se degradent',
+    '2'
+  )
+  .option('--delay <ms>', 'delai minimal entre deux requetes vers un meme domaine', '2000')
+  .option('--timeout <ms>', 'delai maximal par requete', '30000')
+  .option('--strategies <liste>', 'mobile, desktop, ou les deux', 'mobile,desktop')
+  .option('--limit <n>', 'ne traiter que les n premieres cibles')
+  .option('--max-age <jours>', 'reanalyser au dela de cet age')
+  .option('-f, --force', 'ignorer le cache et tout reanalyser')
+  .option('--ignore-robots', 'passer outre le robots.txt (vos propres sites uniquement)')
+  .option('--user-agent <chaine>', 'user-agent a annoncer')
+  .action(async (file, opts) => {
+    const { runScan } = await import('../src/commands/scan.js');
+    await runScan(file, opts);
+  });
+
+program
+  .command('list')
+  .description('reaffiche la synthese depuis le cache, sans rien solliciter')
+  .option('-o, --out <dossier>', 'dossier de sortie', './out')
+  .action(async (opts) => {
+    const { runList } = await import('../src/commands/list.js');
+    await runList(opts);
+  });
+
 program.addHelpText(
   'after',
   `
@@ -51,9 +85,20 @@ ${c.bold('Format du fichier de cibles')}
   point-virgule (export Excel francais) ou une tabulation, il est detecte
   automatiquement. L'en-tete est facultatif.
 
+${c.bold('Deux temps, deux usages')}
+  Le balayage rapide ne fait qu'une requete par site et traite quelques
+  centaines d'entreprises en quelques minutes. Il sert a reperer qui vaut la
+  peine. L'analyse complete lance Lighthouse et prend une a deux minutes par
+  site : on la reserve aux cibles retenues.
+
+    audit scan prospects.csv --quick          # balayage large
+    audit scan retenus.csv                    # analyse complete
+
 ${c.bold('Exemples')}
   audit check examples/prospects-besancon.csv
-  audit check ma-liste.csv --limit 20
+  audit scan examples/prospects-besancon.csv --quick
+  audit scan examples/prospects-besancon.csv --limit 4
+  audit list
 `
 );
 
