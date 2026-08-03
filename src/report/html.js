@@ -274,6 +274,47 @@ function methode(record, gains) {
 </div>`;
 }
 
+/**
+ * Donnees de terrain. Affichees uniquement quand CrUX a effectivement repondu,
+ * ce qui est rare sur une TPE locale. C'est la seule source d'un INP reel : le
+ * reste du rapport s'appuie sur une approximation de laboratoire, et le dire
+ * ici donne au client la mesure de la difference.
+ */
+function donneesTerrain(record) {
+  const terrain = record.terrain;
+  if (!terrain?.disponible || !terrain.metriques) return '';
+
+  const lignes = [
+    ['Affichage du contenu principal', terrain.metriques.lcp, (v) => seconds(v), CWV_THRESHOLDS.lcp],
+    ['Réactivité au clic', terrain.metriques.inp, (v) => ms(v), CWV_THRESHOLDS.inp],
+    ['Stabilité visuelle', terrain.metriques.cls, (v) => decimal(v), CWV_THRESHOLDS.cls],
+    ['Réponse du serveur', terrain.metriques.ttfb, (v) => ms(v), CWV_THRESHOLDS.ttfb],
+  ].filter(([, valeur]) => Number.isFinite(valeur));
+
+  if (!lignes.length) return '';
+
+  const corps = lignes
+    .map(([nom, valeur, formater, seuils]) => {
+      const etat =
+        valeur <= seuils.good ? 'correct' : valeur <= seuils.poor ? 'à améliorer' : 'insuffisant';
+      return `<tr><td>${escapeHtml(nom)}</td>
+        <td class="nombre">${escapeHtml(formater(valeur))}</td>
+        <td class="nombre">${escapeHtml(etat)}</td></tr>`;
+    })
+    .join('\n');
+
+  return `<table class="comparatif">
+  <thead><tr><th>Mesure</th><th style="text-align:right">Vos visiteurs</th>
+  <th style="text-align:right">Appréciation</th></tr></thead>
+  <tbody>${corps}</tbody>
+</table>
+<p style="color:var(--encre-douce);font-size:0.9rem">
+Ces chiffres ne viennent pas d'une simulation : ils sont relevés sur vos
+visiteurs réels utilisant Chrome, avec leurs propres appareils et leur propre
+connexion, et publiés par Google. La réactivité au clic mesurée ici est la
+véritable mesure, celle que le reste de ce rapport ne peut qu'approcher.</p>`;
+}
+
 /** Site injoignable : un rapport court et honnete, sans chiffres inventes. */
 function rapportIndisponible(record, libelle) {
   return page({
@@ -312,6 +353,7 @@ export function buildReport(record, options = {}) {
     jauges(lh),
     section('Les cinq points les plus coûteux', top.map((f, i) => probleme(f, i + 1)).join('\n')),
     section('Ce que vous pouvez gagner', estimationGains(record.gains)),
+    section('Mesures relevées sur vos visiteurs réels', donneesTerrain(record)),
     section('Téléphone et ordinateur', comparatif(record)),
     section('Le reste des points relevés', autresProblemes(reste)),
     annexe(record, lh),

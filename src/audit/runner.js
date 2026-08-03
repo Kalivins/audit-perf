@@ -87,6 +87,19 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
       lighthouse = await measure(target, quick);
     }
 
+    // Donnees de terrain, seule source d'un INP reel. Optionnelles, muettes en
+    // cas d'echec, et sans effet sur le deroulement du lot.
+    let terrain = null;
+    if (config.crux && config.cruxKey && MESURABLE.has(quick.status)) {
+      const { fetchFieldData } = await import('./crux.js');
+      terrain = await fetchFieldData(quick.page?.url || target.url, {
+        key: config.cruxKey,
+        strategy: config.strategies[0] ?? 'mobile',
+        timeout: config.timeout,
+      });
+      onEvent({ type: 'crux', target, disponible: terrain.disponible });
+    }
+
     // Profil retenu pour les constats : le mobile d'abord, parce que c'est
     // la realite des visiteurs d'une TPE. Le bureau ne sert qu'a la
     // comparaison affichee dans le rapport.
@@ -112,6 +125,7 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
         page: quick.page,
       },
       lighthouse,
+      terrain,
       profilRetenu: retenu?.strategy ?? null,
       consolidated,
       gains,

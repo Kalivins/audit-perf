@@ -60,6 +60,12 @@ program
   .option('--ignore-robots', 'passer outre le robots.txt (vos propres sites uniquement)')
   .option('--user-agent <chaine>', 'user-agent a annoncer')
   .option('--csv-delimiter <car>', 'separateur du CSV produit', ';')
+  .option(
+    '--crux',
+    'ajouter les donnees de terrain Google (seule source d\'un INP reel). ' +
+      'Necessite une cle d\'API, et ne repond que pour les sites a fort trafic'
+  )
+  .option('--crux-key <cle>', 'cle d\'API CrUX, sinon variable CRUX_API_KEY')
   .action(async (file, opts) => {
     const { runScan } = await import('../src/commands/scan.js');
     await runScan(file, opts);

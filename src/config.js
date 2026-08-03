@@ -53,6 +53,8 @@ export const CWV_THRESHOLDS = {
   cls: { good: 0.1, poor: 0.25 },
   tbt: { good: 200, poor: 600 },
   ttfb: { good: 800, poor: 1800 },
+  /** Metrique de terrain : renseignee seulement quand CrUX repond. */
+  inp: { good: 200, poor: 500 },
 };
 
 function toInt(value, fallback, { min = 0, max = Infinity } = {}) {
