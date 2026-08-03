@@ -1,11 +1,21 @@
 /**
- * Execution de Lighthouse.
+ * Execution de Lighthouse, dans le processus courant.
  *
- * Un Chrome neuf est lance pour chaque mesure, puis tue. C'est un peu plus
- * lent, mais un navigateur reutilise garde le cache et les cookies du site
- * precedent, ce qui fausse silencieusement les temps mesures. Sur un outil
- * dont toute la valeur repose sur des chiffres opposables, l'isolement prime
- * sur la vitesse.
+ * IMPORTANT : ne jamais appeler cette fonction deux fois en parallele dans un
+ * meme processus. Lighthouse mesure ses propres durees avec des marques de
+ * performance globales nommees (via lighthouse-logger et marky). Deux
+ * executions simultanees utilisent les memes noms, la seconde tente de fermer
+ * une marque que la premiere a deja consommee, et le processus meurt sur une
+ * DOMException levee dans un autre tick, hors de portee de tout try/catch.
+ *
+ * Le lot passe donc par lh-runner.js, qui isole chaque mesure dans son propre
+ * processus. Cette fonction reste l'implementation appelee par ce processus
+ * fils, et sert aussi aux essais unitaires en mesure unique.
+ *
+ * Un Chrome neuf est lance pour chaque mesure, puis tue : un navigateur
+ * reutilise garde le cache et les cookies du site precedent, ce qui fausse
+ * silencieusement les temps. Sur un outil dont la valeur repose sur des
+ * chiffres opposables, l'isolement prime sur la vitesse.
  */
 
 import lighthouse from 'lighthouse';
@@ -25,6 +35,37 @@ const CHROME_FLAGS = [
   '--mute-audio',
 ];
 
+/**
+ * Bruit emis par les entrailles de Lighthouse sur des sites reels. Ces
+ * messages ne concernent pas le site audite et ne sont pas actionnables. Les
+ * taire garde exploitable la sortie d'erreur du processus de mesure, qu'on
+ * relit justement quand quelque chose ne va pas.
+ */
+const BRUIT_CONNU = [
+  /Failed to parse source map/i,
+  /mapping for last column out of bounds/i,
+  /source ?map/i,
+];
+
+let silenceProfondeur = 0;
+let consoleErreurOriginale = null;
+
+function taireLeBruit() {
+  if (silenceProfondeur++ > 0) return;
+  consoleErreurOriginale = console.error;
+  console.error = (...args) => {
+    const texte = args.map((a) => String(a?.message ?? a)).join(' ');
+    if (BRUIT_CONNU.some((motif) => motif.test(texte))) return;
+    consoleErreurOriginale(...args);
+  };
+}
+
+function retablirLaConsole() {
+  if (--silenceProfondeur > 0) return;
+  if (consoleErreurOriginale) console.error = consoleErreurOriginale;
+  consoleErreurOriginale = null;
+}
+
 function withTimeout(promise, ms, label) {
   let timer;
   const timeout = new Promise((_, reject) => {
@@ -40,6 +81,7 @@ function withTimeout(promise, ms, label) {
  */
 export async function runLighthouse(url, { strategy = 'mobile', timeout = 120000 } = {}) {
   let chrome = null;
+  taireLeBruit();
 
   try {
     chrome = await ChromeLauncher.launch({ chromeFlags: CHROME_FLAGS });
@@ -84,6 +126,7 @@ export async function runLighthouse(url, { strategy = 'mobile', timeout = 120000
         // d'origine pour autant.
       }
     }
+    retablirLaConsole();
   }
 }
 

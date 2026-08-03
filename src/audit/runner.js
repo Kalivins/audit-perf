@@ -16,7 +16,6 @@ import pLimit from 'p-limit';
 import { createScheduler, hostOf } from '../net/politeness.js';
 import { createRobotsCache } from '../net/robots.js';
 import { runQuickAudit, STATUS } from './quick.js';
-import { readLighthouse } from './vitals.js';
 import { consolidate } from '../score/findings.js';
 import { estimateGains } from '../score/gains.js';
 import { prospectScore, hook } from '../score/prospect.js';
@@ -44,9 +43,8 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
   const lhLimit = pLimit(config.lhConcurrency);
 
   async function measure(target, quick) {
-    // Charge a la demande : le module Lighthouse est long a initialiser et le
-    // mode rapide ne doit jamais en payer le prix.
-    const { runLighthouse } = await import('./lighthouse.js');
+    // Charge a la demande : le mode rapide ne doit pas payer ce chargement.
+    const { runLighthouseIsolated } = await import('./lh-runner.js');
     const lighthouse = {};
     const host = hostOf(target.url);
     // On mesure l'adresse reellement servie : inutile de faire refaire a
@@ -56,13 +54,15 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
     for (const strategy of config.strategies) {
       const run = await lhLimit(() =>
         scheduler.run(host, () =>
-          runLighthouse(url, { strategy, timeout: config.timeout * 4 })
+          runLighthouseIsolated(url, {
+            strategy,
+            timeout: config.timeout * 4,
+            debug: config.debug,
+          })
         )
       );
-      lighthouse[strategy] = run.ok
-        ? readLighthouse(run.lhr, { strategy })
-        : { strategy, erreur: run.error };
-      onEvent({ type: 'lighthouse', target, strategy, ok: run.ok });
+      lighthouse[strategy] = run.ok ? run.data : { strategy, erreur: run.error };
+      onEvent({ type: 'lighthouse', target, strategy, ok: run.ok, erreur: run.error });
     }
     return lighthouse;
   }
