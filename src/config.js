@@ -40,6 +40,8 @@ export const DEFAULTS = {
   ignoreRobots: false,
   userAgent: DEFAULT_USER_AGENT,
   crux: false,
+  /** Point-virgule par defaut : Excel en locale francaise n'accepte que lui. */
+  csvDelimiter: ';',
 };
 
 /** Au dela de ce seuil les mesures Lighthouse deviennent peu fiables. */
@@ -83,6 +85,7 @@ export function buildConfig(raw = {}) {
     userAgent: raw.userAgent || DEFAULTS.userAgent,
     crux: Boolean(raw.crux),
     cruxKey: raw.cruxKey || process.env.CRUX_API_KEY || null,
+    csvDelimiter: raw.csvDelimiter || DEFAULTS.csvDelimiter,
   };
 }
 

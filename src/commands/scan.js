@@ -99,6 +99,11 @@ export async function runScan(file, options = {}) {
   log.blank();
   log.raw(renderLegend());
   log.blank();
-  log.ok(`Resultats bruts dans ${c.bold(store.dirs.raw)}`);
+
+  const { writeOutputs } = await import('../report/outputs.js');
+  const written = await writeOutputs(records, config, store);
+
+  log.ok(`Resultats bruts   ${c.bold(store.dirs.raw)}`);
+  log.ok(`Liste de prospection   ${c.bold(written.csv.file)} (${written.csv.lignes} lignes)`);
   log.blank();
 }

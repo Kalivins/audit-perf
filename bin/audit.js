@@ -59,9 +59,20 @@ program
   .option('-f, --force', 'ignorer le cache et tout reanalyser')
   .option('--ignore-robots', 'passer outre le robots.txt (vos propres sites uniquement)')
   .option('--user-agent <chaine>', 'user-agent a annoncer')
+  .option('--csv-delimiter <car>', 'separateur du CSV produit', ';')
   .action(async (file, opts) => {
     const { runScan } = await import('../src/commands/scan.js');
     await runScan(file, opts);
+  });
+
+program
+  .command('report')
+  .description('regenere les sorties depuis le cache, sans rien solliciter')
+  .option('-o, --out <dossier>', 'dossier de sortie', './out')
+  .option('--csv-delimiter <car>', 'separateur du CSV produit', ';')
+  .action(async (opts) => {
+    const { runReport } = await import('../src/commands/report.js');
+    await runReport(opts);
   });
 
 program

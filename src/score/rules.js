@@ -50,10 +50,13 @@ export const RULES = {
   'https-absent': { tier: B, poids: 98, effort: FAIBLE, theme: 'conformite' },
   'mentions-legales-absentes': { tier: B, poids: 95, effort: FAIBLE, theme: 'conformite' },
   'page-sans-contenu-html': { tier: B, poids: 94, effort: ELEVE, theme: 'contenu' },
+  // Une version de PHP sans correctif de securite passe devant les manquements
+  // documentaires : une faille non corrigee est exploitable des aujourd'hui,
+  // et c'est aussi l'accroche la plus forte pour ouvrir une conversation.
+  'php-obsolete': { tier: B, poids: 92, effort: MOYEN, theme: 'conformite' },
   'confidentialite-absente': { tier: B, poids: 90, effort: FAIBLE, theme: 'conformite' },
   'traceurs-sans-consentement': { tier: B, poids: 88, effort: MOYEN, theme: 'conformite' },
   'viewport-absent': { tier: B, poids: 86, effort: FAIBLE, theme: 'conformite' },
-  'php-obsolete': { tier: B, poids: 84, effort: MOYEN, theme: 'conformite' },
   'code-http-anormal': { tier: B, poids: 82, effort: MOYEN, theme: 'contenu' },
   'mentions-legales-cassees': { tier: B, poids: 80, effort: FAIBLE, theme: 'conformite' },
   'confidentialite-cassee': { tier: B, poids: 78, effort: FAIBLE, theme: 'conformite' },
