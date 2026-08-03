@@ -1,0 +1,136 @@
+{
+  "_lisez_moi": "Empreintes de detection. Chaque entree peut porter: html (sous-chaines, insensibles a la casse), regex (motif unique), generator (contenu de la meta generator), header (en-tete de reponse), version (regex a un groupe de capture), implique (technologies deduites). La confiance vaut certaine ou probable; seules les certaines sont affirmees telles quelles dans un rapport client.",
+
+  "technologies": [
+    { "nom": "WordPress", "categorie": "CMS", "confiance": "certaine",
+      "html": ["/wp-content/", "/wp-includes/", "wp-json"],
+      "generator": "wordpress",
+      "version": "content=\"WordPress ([0-9.]+)" },
+
+    { "nom": "WooCommerce", "categorie": "E-commerce", "confiance": "certaine",
+      "html": ["/plugins/woocommerce/", "woocommerce-page", "wc-add-to-cart"],
+      "implique": ["WordPress"] },
+
+    { "nom": "Elementor", "categorie": "Constructeur de pages", "confiance": "certaine",
+      "html": ["/elementor/assets/", "elementor-widget-", "elementor-page"],
+      "implique": ["WordPress"] },
+
+    { "nom": "Divi", "categorie": "Constructeur de pages", "confiance": "certaine",
+      "html": ["/themes/Divi/", "et_pb_section", "et_pb_row"],
+      "implique": ["WordPress"] },
+
+    { "nom": "WPBakery", "categorie": "Constructeur de pages", "confiance": "certaine",
+      "html": ["js_composer", "vc_row", "wpb_wrapper"],
+      "implique": ["WordPress"] },
+
+    { "nom": "PrestaShop", "categorie": "E-commerce", "confiance": "certaine",
+      "html": ["var prestashop", "/themes/classic/assets/", "prestashop-"],
+      "generator": "prestashop" },
+
+    { "nom": "Shopify", "categorie": "E-commerce", "confiance": "certaine",
+      "html": ["cdn.shopify.com", "Shopify.theme", "myshopify.com"] },
+
+    { "nom": "Magento", "categorie": "E-commerce", "confiance": "probable",
+      "html": ["/static/version", "Magento_Ui/", "mage/cookies"] },
+
+    { "nom": "Joomla", "categorie": "CMS", "confiance": "certaine",
+      "html": ["/media/jui/", "/components/com_", "/media/system/js/"],
+      "generator": "joomla" },
+
+    { "nom": "Drupal", "categorie": "CMS", "confiance": "certaine",
+      "html": ["/sites/default/files/", "Drupal.settings", "drupal-data"],
+      "generator": "drupal",
+      "header": { "nom": "x-generator", "contient": "drupal" } },
+
+    { "nom": "SPIP", "categorie": "CMS", "confiance": "certaine",
+      "html": ["/local/cache-", "spip.php"],
+      "generator": "spip",
+      "header": { "nom": "composed-by", "contient": "spip" } },
+
+    { "nom": "TYPO3", "categorie": "CMS", "confiance": "certaine",
+      "html": ["/typo3conf/", "/typo3temp/"],
+      "generator": "typo3" },
+
+    { "nom": "Odoo", "categorie": "CMS", "confiance": "probable",
+      "html": ["/web/static/", "odoo.define", "o_website"],
+      "generator": "odoo" },
+
+    { "nom": "Wix", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["static.wixstatic.com", "wixsite.com", "wix-code"],
+      "header": { "nom": "x-wix-request-id", "contient": "" } },
+
+    { "nom": "Squarespace", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["static1.squarespace.com", "squarespace.com/universal"],
+      "generator": "squarespace" },
+
+    { "nom": "Webflow", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["assets.website-files.com", "uploads-ssl.webflow.com", "wf-domain"],
+      "generator": "webflow" },
+
+    { "nom": "Jimdo", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["cdn.jimdo.com", "jimdo-", "assets.jimstatic.com"] },
+
+    { "nom": "e-monsite", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["e-monsite.com", "emonsite"] },
+
+    { "nom": "Site123", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["site123.me", "site123-"] },
+
+    { "nom": "GoDaddy Website Builder", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["img1.wsimg.com", "godaddysites.com"] },
+
+    { "nom": "Duda", "categorie": "Constructeur de site", "confiance": "probable",
+      "html": ["irp.cdn-website.com", "/_dm/s/", "dudamobile"] },
+
+    { "nom": "Google Sites", "categorie": "Constructeur de site", "confiance": "certaine",
+      "html": ["sites.google.com", "gstatic.com/atari"] },
+
+    { "nom": "Next.js", "categorie": "Framework", "confiance": "certaine",
+      "html": ["/_next/static", "__NEXT_DATA__"],
+      "header": { "nom": "x-powered-by", "contient": "next.js" } },
+
+    { "nom": "Nuxt", "categorie": "Framework", "confiance": "certaine",
+      "html": ["/_nuxt/", "__NUXT__"] },
+
+    { "nom": "Angular", "categorie": "Framework", "confiance": "probable",
+      "html": ["ng-version=", "ng-app"] },
+
+    { "nom": "React", "categorie": "Framework", "confiance": "probable",
+      "html": ["data-reactroot", "__REACT_DEVTOOLS"] },
+
+    { "nom": "Vue.js", "categorie": "Framework", "confiance": "probable",
+      "html": ["__VUE__", "data-v-app"] },
+
+    { "nom": "Bootstrap", "categorie": "Bibliotheque", "confiance": "probable",
+      "html": ["bootstrap.min.css", "bootstrap.bundle", "class=\"container-fluid\""] },
+
+    { "nom": "jQuery", "categorie": "Bibliotheque", "confiance": "probable",
+      "html": ["jquery.min.js", "jquery-migrate", "/jquery/"],
+      "version": "jquery[.-]?([0-9]+\\.[0-9]+\\.[0-9]+)\\.min\\.js" },
+
+    { "nom": "Font Awesome", "categorie": "Bibliotheque", "confiance": "probable",
+      "html": ["font-awesome", "fontawesome"] },
+
+    { "nom": "Cloudflare", "categorie": "CDN", "confiance": "certaine",
+      "header": { "nom": "cf-ray", "contient": "" } },
+
+    { "nom": "Nginx", "categorie": "Serveur", "confiance": "certaine",
+      "header": { "nom": "server", "contient": "nginx" },
+      "version": "nginx/([0-9.]+)" },
+
+    { "nom": "Apache", "categorie": "Serveur", "confiance": "certaine",
+      "header": { "nom": "server", "contient": "apache" },
+      "version": "Apache/([0-9.]+)" },
+
+    { "nom": "LiteSpeed", "categorie": "Serveur", "confiance": "certaine",
+      "header": { "nom": "server", "contient": "litespeed" } },
+
+    { "nom": "Microsoft IIS", "categorie": "Serveur", "confiance": "certaine",
+      "header": { "nom": "server", "contient": "iis" },
+      "version": "IIS/([0-9.]+)" },
+
+    { "nom": "PHP", "categorie": "Langage", "confiance": "certaine",
+      "header": { "nom": "x-powered-by", "contient": "php" },
+      "version": "PHP/([0-9.]+)" }
+  ]
+}

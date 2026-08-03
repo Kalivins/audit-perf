@@ -16,6 +16,7 @@ import { checkLegal } from './checks/legal.js';
 import { checkTracking } from './checks/tracking.js';
 import { checkImages } from './checks/images.js';
 import { checkFonts } from './checks/fonts.js';
+import { detectStack } from './checks/stack.js';
 
 export const STATUS = {
   OK: 'ok',
@@ -158,6 +159,10 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   const tracking = checkTracking({ html });
   findings.push(...tracking.findings);
   summary.traceurs = tracking.summary;
+
+  const stack = await detectStack({ html, headers: page.headers });
+  findings.push(...stack.findings);
+  summary.stack = stack.summary;
 
   const legal = await checkLegal({
     dom,
