@@ -1,0 +1,27 @@
+{
+  "name": "audit-perf",
+  "version": "0.1.0",
+  "description": "Audit de performance et de conformite pour sites de TPE/PME francaises. 100% local.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "audit": "./bin/audit.js"
+  },
+  "scripts": {
+    "scan": "node bin/audit.js scan",
+    "report": "node bin/audit.js report",
+    "list": "node bin/audit.js list"
+  },
+  "dependencies": {
+    "chrome-launcher": "^1.1.2",
+    "commander": "^12.1.0",
+    "csv-parse": "^5.5.6",
+    "csv-stringify": "^6.5.2",
+    "lighthouse": "^12.2.1",
+    "p-limit": "^6.1.0",
+    "robots-parser": "^3.0.1"
+  }
+}
