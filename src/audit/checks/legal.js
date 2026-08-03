@@ -1,10 +1,15 @@
 /**
  * Obligations legales francaises verifiables depuis la page d'accueil.
  *
- * Mentions legales : article 6 III de la LCEN, obligatoire pour tout site
- * professionnel. Politique de confidentialite : exigee des lors que le site
- * traite des donnees personnelles, ce qui couvre le moindre formulaire de
- * contact ou le moindre traceur.
+ * Mentions legales : article 1-1 de la LCEN, obligatoire pour tout editeur de
+ * site professionnel, la sanction relevant de l'article 1-2. Attention a la
+ * renumerotation : la loi SREN du 21 mai 2024 a restructure la LCEN et
+ * l'article 6 III, encore cite partout, n'existe plus. L'article 6 traite
+ * desormais des seuls services d'intermediaire.
+ *
+ * Politique de confidentialite : exigee des lors que le site traite des
+ * donnees personnelles, ce qui couvre le moindre formulaire de contact ou le
+ * moindre traceur.
  *
  * Deux precautions pour ne pas produire de faux constats sur un rapport
  * facture :

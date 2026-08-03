@@ -1,0 +1,86 @@
+{
+  "https-absent": {
+    "titre": "Votre site n'est pas sécurisé",
+    "constat": "Le site répond en HTTP simple, sans chiffrement.",
+    "cout": "Chrome et Firefox affichent « Non sécurisé » dans la barre d'adresse avant même que le visiteur ait vu votre page. Une partie s'arrête là. Tout ce que vos clients saisissent, y compris les messages de votre formulaire de contact, circule en clair sur le réseau. Google défavorise par ailleurs les sites non chiffrés dans son classement depuis plus de dix ans.",
+    "correction": "Activer un certificat TLS, gratuit chez la quasi-totalité des hébergeurs via Let's Encrypt, puis rediriger l'ancienne adresse vers la nouvelle."
+  },
+
+  "https-non-force": {
+    "titre": "Votre site reste joignable sans protection",
+    "constat": "L'adresse en http répond {reponse_en_http} au lieu de renvoyer vers la version sécurisée.",
+    "cout": "Vous avez un certificat que vos visiteurs contournent sans le savoir. Un favori enregistré il y a trois ans, un lien dans un annuaire, une carte de visite imprimée, et le visiteur atterrit sur la version non protégée. Google traite en plus les deux adresses comme deux sites distincts, ce qui partage votre référencement en deux au lieu de le concentrer.",
+    "correction": "Ajouter une redirection permanente de http vers https dans la configuration du serveur ou le fichier .htaccess."
+  },
+
+  "ressources-non-securisees": {
+    "titre": "Une partie de votre page se charge sans protection",
+    "constat": "{valeur}. La page est servie en HTTPS mais appelle des fichiers en HTTP.",
+    "cout": "Le navigateur bloque ces éléments ou affiche un avertissement, selon le cas. Concrètement, une image, une police ou un script peut ne jamais s'afficher chez certains visiteurs, sans que rien ne vous le signale de votre côté. Le cadenas de sécurité peut également disparaître de la barre d'adresse.",
+    "correction": "Remplacer les adresses en http par leur équivalent en https dans le contenu et les thèmes."
+  },
+
+  "mentions-legales-absentes": {
+    "titre": "Vos mentions légales sont introuvables",
+    "constat": "Aucun lien vers des mentions légales n'a été trouvé sur la page d'accueil, sur {liens_examines} liens examinés.",
+    "cout": "Les mentions légales sont obligatoires pour tout éditeur de site professionnel en France, au titre de l'article 1-1 de la LCEN. Leur absence est un délit, puni de 75 000 euros d'amende pour une personne physique et de 375 000 euros pour une société. Au delà du risque, c'est le premier endroit où un client qui hésite vérifie à qui il a affaire avant de commander ou de signer.",
+    "correction": "Créer une page portant la dénomination, la forme juridique, l'adresse, le numéro SIRET, un moyen de contact, le nom du directeur de la publication et les coordonnées de l'hébergeur, puis la lier depuis le pied de page de tout le site."
+  },
+
+  "mentions-legales-cassees": {
+    "titre": "Le lien vers vos mentions légales ne fonctionne plus",
+    "constat": "Le lien pointe vers {url}, qui répond {statut}.",
+    "cout": "Le lien existe, la page a disparu. Du point de vue de la loi, la situation est la même que si vous n'aviez jamais rien publié, et vous n'en savez rien puisque le lien est bien là dans votre pied de page. C'est le genre de détail qu'un concurrent ou un client mécontent trouve en premier.",
+    "correction": "Rétablir la page ou corriger l'adresse du lien."
+  },
+
+  "confidentialite-absente": {
+    "titre": "Aucune politique de confidentialité",
+    "constat": "Aucun lien vers une politique de confidentialité n'a été trouvé sur la page d'accueil.",
+    "cout": "Dès qu'un site collecte la moindre donnée personnelle, un formulaire de contact ou une simple mesure d'audience suffisent, le RGPD impose d'informer les visiteurs de ce que vous en faites. Sans ce document, vous ne pouvez pas démontrer que vous informez correctement, et c'est la première pièce que réclame la CNIL en cas de plainte d'un visiteur.",
+    "correction": "Publier une page décrivant les données collectées, leur finalité, leur durée de conservation, les destinataires et la façon d'exercer ses droits."
+  },
+
+  "confidentialite-cassee": {
+    "titre": "Le lien vers votre politique de confidentialité est mort",
+    "constat": "Le lien pointe vers {url}, qui répond {statut}.",
+    "cout": "Un visiteur qui veut savoir ce que vous faites de ses données tombe sur une page d'erreur. En cas de réclamation, vous êtes dans la même situation que si le document n'existait pas.",
+    "correction": "Rétablir la page ou corriger l'adresse du lien."
+  },
+
+  "traceurs-sans-consentement": {
+    "titre": "Vous déposez des traceurs sans demander l'accord",
+    "constat": "Traceurs détectés : {traceurs}. Aucun dispositif de recueil du consentement n'a été repéré sur la page.",
+    "cout": "Ces outils déposent des cookies dès l'arrivée du visiteur. La loi impose de recueillir son accord avant, et de lui permettre de refuser aussi facilement que d'accepter. La CNIL traite ce sujet en procédure simplifiée pour les petites structures, avec des amendes pouvant aller jusqu'à 20 000 euros, et il suffit d'une plainte d'un visiteur pour déclencher un contrôle.",
+    "correction": "Installer un bandeau de consentement qui bloque réellement les traceurs tant que le visiteur n'a pas accepté. Plusieurs solutions gratuites existent, dont Tarteaucitron.",
+    "reserve": "Analyse fondée sur le code de la page d'accueil. Un bandeau ajouté par un script tiers peut échapper à cette détection, ce point mérite une vérification manuelle."
+  },
+
+  "viewport-absent": {
+    "titre": "Votre site n'est pas prévu pour les téléphones",
+    "constat": "La balise qui indique au téléphone comment afficher la page est absente.",
+    "cout": "Sur mobile, le navigateur affiche votre site comme sur un écran d'ordinateur puis réduit le tout pour le faire tenir. Le texte devient minuscule, les boutons deviennent impossibles à viser, et le visiteur doit zoomer et faire glisser la page pour lire la moindre ligne. La majorité de vos visiteurs arrivent depuis un téléphone. Google classe par ailleurs les sites en se fondant sur leur version mobile.",
+    "correction": "Ajouter la balise viewport dans l'en-tête du site. C'est une ligne, mais elle révèle souvent que la mise en page n'a jamais été pensée pour un petit écran."
+  },
+
+  "viewport-mal-configure": {
+    "titre": "L'affichage mobile est mal réglé",
+    "constat": "La balise viewport est présente mais mal renseignée : {content}",
+    "cout": "Le réglage ne dit pas au téléphone d'adapter la page à la largeur de son écran. Le résultat ressemble à un site sans configuration mobile du tout : texte trop petit, défilement horizontal, boutons difficiles à atteindre.",
+    "correction": "Corriger la balise pour qu'elle adapte la largeur à celle de l'appareil."
+  },
+
+  "zoom-bloque": {
+    "titre": "Vos visiteurs ne peuvent pas agrandir le texte",
+    "constat": "Le site interdit le zoom : {content}",
+    "cout": "Toute personne qui a besoin d'agrandir pour lire se retrouve bloquée. Cela concerne une part importante de vos clients, en particulier passé la cinquantaine. C'est aussi un manquement d'accessibilité que les navigateurs récents commencent à ignorer purement et simplement, ce qui rend le réglage inutile en plus d'être hostile.",
+    "correction": "Retirer user-scalable=no et maximum-scale de la balise viewport."
+  },
+
+  "php-obsolete": {
+    "titre": "Votre serveur tourne sur une version obsolète",
+    "constat": "Le serveur annonce PHP {version}, qui ne reçoit plus aucun correctif de sécurité.",
+    "cout": "Chaque faille découverte depuis la fin du support reste ouverte sur votre site, définitivement. C'est la porte d'entrée la plus courante pour un défacement ou l'injection de pages de spam, qui font ensuite blacklister votre domaine par Google. Votre hébergeur propose presque certainement une version à jour, il suffit de basculer dessus.",
+    "correction": "Passer à une version de PHP encore supportée depuis le panneau de votre hébergeur, après avoir vérifié la compatibilité du site sur une copie de test."
+  }
+}

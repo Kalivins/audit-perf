@@ -1,0 +1,149 @@
+{
+  "indexation-bloquee": {
+    "titre": "Votre site demande à Google de ne pas le référencer",
+    "constat": "La page interdit explicitement son indexation par les moteurs de recherche.",
+    "cout": "Votre site est en ligne, il fonctionne, et il est invisible dans les résultats de recherche. Personne ne peut vous trouver autrement qu'en connaissant déjà votre adresse. C'est presque toujours un réglage de mise au point resté actif après une refonte, oublié pendant des mois. Tant qu'il est là, tout le reste ne sert à rien.",
+    "correction": "Retirer la consigne noindex, dans les réglages de visibilité du CMS ou dans l'en-tête des pages. Demander ensuite une nouvelle exploration depuis la Search Console."
+  },
+
+  "page-sans-contenu-html": {
+    "titre": "Votre serveur renvoie une page vide",
+    "constat": "Le serveur répond {statut_http} avec un document de {octets} octets.",
+    "cout": "Le site répond, mais ne livre aucun contenu à qui le consulte sans exécuter de JavaScript. Une partie des moteurs de recherche et des outils d'aperçu voient exactement la même chose que nous : rien. Si votre référencement s'est effondré sans explication, c'est la première piste à examiner.",
+    "correction": "Vérifier la configuration du serveur et la façon dont le contenu est produit. Si le site repose entièrement sur du JavaScript, faire générer une version consultable sans lui.",
+    "reserve": "Constat établi depuis une requête standard. Un navigateur complet peut afficher la page normalement, ce point doit être confirmé de visu."
+  },
+
+  "code-http-anormal": {
+    "titre": "Votre page renvoie un code d'erreur",
+    "constat": "{valeur}",
+    "cout": "Le serveur signale une anomalie sur cette page. Les moteurs de recherche interprètent ce signal et peuvent retirer la page de leurs résultats, même si elle s'affiche correctement dans un navigateur.",
+    "correction": "Corriger la configuration du serveur pour qu'une page valide renvoie un code de succès."
+  },
+
+  "titre-absent": {
+    "titre": "Votre page n'a pas de titre",
+    "constat": "Aucune balise de titre exploitable.",
+    "cout": "Le titre est la ligne bleue cliquable dans les résultats Google, et le texte affiché dans l'onglet du navigateur. Sans lui, Google invente quelque chose à partir de votre contenu, généralement mal. C'est le premier élément que voit un client potentiel, avant même votre site.",
+    "correction": "Renseigner un titre décrivant votre activité et votre ville, en une soixantaine de caractères."
+  },
+
+  "titre-trop-long": {
+    "titre": "Votre titre est coupé dans les résultats de recherche",
+    "constat": "{longueur} caractères, au delà de la limite d'environ {maximum} : « {titre} »",
+    "cout": "Google tronque la fin. Le visiteur voit une phrase interrompue au milieu, ce qui inspire moins confiance qu'un titre net et complet.",
+    "correction": "Ramener le titre sous une soixantaine de caractères en gardant l'essentiel au début."
+  },
+
+  "titre-trop-court": {
+    "titre": "Votre titre est trop bref",
+    "constat": "{longueur} caractères seulement : « {titre} »",
+    "cout": "Vous laissez de la place inutilisée à l'endroit le plus visible de votre présence sur Google. Un titre qui précise votre métier et votre secteur géographique attire davantage de clics qu'un simple nom d'entreprise.",
+    "correction": "Compléter avec votre activité et votre ville."
+  },
+
+  "description-absente": {
+    "titre": "Aucun texte de présentation dans les résultats de recherche",
+    "constat": "La balise de description est absente.",
+    "cout": "C'est le paragraphe affiché sous le titre dans Google. Sans lui, le moteur prélève une phrase au hasard dans votre page, souvent un bout de menu ou une mention de cookies. Vous laissez à un algorithme le soin d'écrire votre argumentaire commercial.",
+    "correction": "Rédiger une description d'environ 150 caractères présentant votre offre et invitant à venir."
+  },
+
+  "description-trop-longue": {
+    "titre": "Votre texte de présentation est coupé",
+    "constat": "{longueur} caractères, au delà d'environ {maximum}.",
+    "cout": "La fin est tronquée dans les résultats de recherche. Si votre argument principal ou votre numéro de téléphone se trouve à la fin, il n'est jamais lu.",
+    "correction": "Raccourcir à environ 150 caractères en plaçant l'essentiel au début."
+  },
+
+  "description-trop-courte": {
+    "titre": "Votre texte de présentation est trop bref",
+    "constat": "{longueur} caractères seulement.",
+    "cout": "Vous disposez d'environ 150 caractères gratuits pour convaincre quelqu'un de cliquer sur votre site plutôt que sur celui du concurrent juste en dessous. En utiliser une fraction est un gâchis.",
+    "correction": "Étoffer la description avec votre spécialité et ce qui vous distingue."
+  },
+
+  "titre-h1-absent": {
+    "titre": "Votre page n'a pas de titre principal",
+    "constat": "Aucun titre de niveau 1 dans la page.",
+    "cout": "Le titre principal annonce le sujet de la page, aux visiteurs comme aux moteurs de recherche. Sans lui, Google doit deviner de quoi vous parlez, et les lecteurs d'écran utilisés par les personnes malvoyantes n'ont aucun repère pour se situer.",
+    "correction": "Ajouter un titre principal unique, décrivant l'activité de la page."
+  },
+
+  "titres-h1-multiples": {
+    "titre": "Votre page a plusieurs titres principaux",
+    "constat": "{nombre} titres de niveau 1 sur la même page.",
+    "cout": "Le message envoyé aux moteurs de recherche devient confus : plusieurs sujets déclarés comme principaux reviennent à n'en déclarer aucun. C'est un défaut fréquent des thèmes qui appliquent le style de titre à des éléments décoratifs.",
+    "correction": "Ne garder qu'un seul titre de niveau 1 et rétrograder les autres."
+  },
+
+  "langue-non-declaree": {
+    "titre": "La langue de votre site n'est pas déclarée",
+    "constat": "L'attribut de langue est absent.",
+    "cout": "Les navigateurs proposent parfois de traduire une page française vers le français, ce qui déroute le visiteur. Les lecteurs d'écran prononcent le texte avec le mauvais accent, jusqu'à le rendre incompréhensible. Les moteurs de recherche s'en servent aussi pour cibler les résultats par pays.",
+    "correction": "Déclarer la langue française dans la balise html."
+  },
+
+  "images-sans-description": {
+    "titre": "Vos images n'ont pas de description",
+    "constat": "{elements} images sans texte alternatif.",
+    "cout": "Une personne aveugle ou malvoyante ne perçoit rien de ces images. Un visiteur dont la connexion échoue non plus. Google, qui ne voit pas les photos, s'appuie sur ces descriptions pour comprendre et référencer votre contenu, notamment dans la recherche d'images où beaucoup de commerces sont trouvés.",
+    "correction": "Renseigner une description courte et factuelle sur chaque image porteuse d'information."
+  },
+
+  "contraste-insuffisant": {
+    "titre": "Certains textes sont difficiles à lire",
+    "constat": "Des textes n'offrent pas un contraste suffisant avec leur fond.",
+    "cout": "Le gris clair sur blanc rend bien sur l'écran du concepteur, dans un bureau. Il devient illisible sur un téléphone en plein soleil, ou pour toute personne dont la vue baisse. Vos tarifs, vos horaires et votre numéro de téléphone méritent d'être lisibles par tout le monde.",
+    "correction": "Assombrir les textes concernés jusqu'à un rapport de contraste d'au moins 4,5 pour 1."
+  },
+
+  "champs-sans-etiquette": {
+    "titre": "Les champs de vos formulaires ne sont pas étiquetés",
+    "constat": "{elements} champs sans étiquette associée.",
+    "cout": "Les lecteurs d'écran annoncent « champ de saisie » sans dire ce qu'il faut y mettre. Le remplissage automatique du navigateur ne fonctionne pas non plus, ce qui allonge la saisie pour tout le monde. Sur un formulaire de contact, chaque friction supplémentaire fait perdre des demandes.",
+    "correction": "Associer une étiquette à chaque champ."
+  },
+
+  "liens-sans-intitule": {
+    "titre": "Certains de vos liens n'ont pas d'intitulé",
+    "constat": "{elements} liens sans texte exploitable.",
+    "cout": "Ce sont souvent des icônes de réseaux sociaux ou des flèches. Une personne utilisant un lecteur d'écran entend « lien » sans savoir où il mène. Google ne peut pas non plus comprendre vers quoi vous pointez.",
+    "correction": "Ajouter un intitulé aux liens constitués uniquement d'une image ou d'une icône."
+  },
+
+  "boutons-sans-intitule": {
+    "titre": "Certains de vos boutons n'ont pas d'intitulé",
+    "constat": "{elements} boutons sans texte exploitable.",
+    "cout": "Un bouton dont on ignore la fonction ne sera pas activé. Si le bouton d'envoi de votre formulaire ou celui d'ouverture du menu est concerné, une partie de vos visiteurs ne peut simplement pas s'en servir.",
+    "correction": "Donner un intitulé accessible à chaque bouton, même quand il n'affiche qu'une icône."
+  },
+
+  "liens-non-suivables": {
+    "titre": "Certains liens ne peuvent pas être suivis par Google",
+    "constat": "Des liens ne sont pas exploitables par les moteurs de recherche.",
+    "cout": "Les pages derrière ces liens risquent de ne jamais être découvertes ni référencées. Si votre page de contact ou votre catalogue est accessible uniquement par ce chemin, elle reste invisible.",
+    "correction": "Utiliser de vrais liens avec une adresse, plutôt que des éléments rendus cliquables par du code."
+  },
+
+  "erreurs-javascript": {
+    "titre": "Votre site produit des erreurs",
+    "constat": "Des erreurs sont signalées dans la console du navigateur.",
+    "cout": "Une erreur interrompt le code en cours d'exécution. Concrètement, un menu qui ne s'ouvre plus, un formulaire qui n'envoie rien, un diaporama figé. Le visiteur n'a aucun message et conclut simplement que le site ne marche pas.",
+    "correction": "Examiner les erreurs signalées et corriger ou retirer les scripts fautifs."
+  },
+
+  "technologies-depreciees": {
+    "titre": "Votre site utilise des techniques abandonnées",
+    "constat": "Des fonctions dépréciées sont employées.",
+    "cout": "Ces fonctions sont vouées à disparaître des navigateurs. Le jour où elles seront retirées, la partie du site qui en dépend cessera de fonctionner, sans prévenir et sans que rien n'ait changé de votre côté.",
+    "correction": "Mettre à jour les extensions et le thème concernés."
+  },
+
+  "partage-social-non-configure": {
+    "titre": "Vos liens partagés s'affichent sans aperçu",
+    "constat": "Aperçu de partage incomplet (titre : {og_title}, image : {og_image}).",
+    "cout": "Quand un client partage votre site sur Facebook, WhatsApp ou par message, le lien apparaît nu, sans image ni titre. Un lien avec visuel attire nettement plus de clics qu'une adresse brute. C'est du bouche à oreille que vous laissez se perdre.",
+    "correction": "Renseigner un titre, une description et une image de partage dans les métadonnées Open Graph."
+  }
+}

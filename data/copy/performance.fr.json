@@ -1,0 +1,170 @@
+{
+  "lcp-trop-lent": {
+    "titre": "Votre page met trop longtemps à s'afficher",
+    "constat": "Le principal élément visible apparaît au bout de {lcp} sur mobile. Le seuil considéré comme correct par Google est de 2,5 s.",
+    "cout": "C'est le temps réel que vit un client qui vous cherche depuis son téléphone, dans la rue, sur le réseau mobile. Pendant ces secondes il regarde un écran vide ou incomplet. C'est le moment précis où l'on revient en arrière pour cliquer sur le concurrent suivant dans la liste des résultats. Cette mesure fait partie des critères que Google utilise pour classer les sites.",
+    "correction": "Le détail des causes figure dans les points suivants. Elles se cumulent, et les traiter dans l'ordre de ce rapport donne le gain le plus rapide."
+  },
+
+  "cls-eleve": {
+    "titre": "Votre page bouge pendant qu'elle se charge",
+    "constat": "Décalage visuel mesuré à {cls}. Le seuil correct est de 0,1.",
+    "cout": "Les éléments se déplacent au fur et à mesure que la page arrive. Le visiteur commence à lire, le texte saute, il vise un bouton et clique sur autre chose. C'est irritant sur un ordinateur, et franchement pénible sur un téléphone. Sur une page de commande ou de prise de rendez-vous, c'est une source directe d'abandon.",
+    "correction": "Réserver l'espace des images et des publicités en indiquant leurs dimensions, et éviter d'insérer des blocs au dessus du contenu déjà affiché."
+  },
+
+  "reactivite-faible": {
+    "titre": "Votre page ne répond pas tout de suite aux clics",
+    "constat": "Le navigateur reste bloqué {tbt} pendant le chargement.",
+    "cout": "Pendant ce temps, la page est visible mais elle ignore les clics. Le visiteur appuie sur un bouton, rien ne se passe, il appuie une seconde fois, et se retrouve parfois avec l'action exécutée deux fois. C'est ce qui donne l'impression d'un site « qui rame » même quand il s'affiche vite.",
+    "correction": "Alléger le JavaScript exécuté au chargement et différer ce qui n'est pas nécessaire à l'affichage initial.",
+    "reserve": "Cette mesure est réalisée en laboratoire. Elle approche la réactivité ressentie sans la mesurer sur vos visiteurs réels."
+  },
+
+  "page-trop-lourde": {
+    "titre": "Votre page est trop lourde",
+    "constat": "{valeur} à télécharger pour afficher une seule page.",
+    "cout": "Chaque mégaoctet se paie en secondes d'attente sur le réseau mobile, et en données consommées sur le forfait de votre visiteur. Un client qui consulte votre carte ou vos tarifs depuis sa voiture, avec deux barres de réseau, attend proportionnellement à ce poids. C'est souvent le chiffre le plus parlant d'un audit : une page d'accueil n'a aucune raison de peser plus qu'un long document.",
+    "correction": "Les postes les plus lourds sont détaillés ci-dessous. Les images en représentent presque toujours la majeure partie."
+  },
+
+  "images-surdimensionnees": {
+    "titre": "Vos images sont bien plus grandes que nécessaire",
+    "constat": "{gain_poids} téléchargés pour rien, soit {gain_temps} de chargement. {elements} images concernées.",
+    "cout": "Les photos envoyées au site sont servies dans leur taille d'origine, celle qui sort de l'appareil, alors qu'elles s'affichent dans un cadre bien plus petit. Le visiteur télécharge une image de plusieurs milliers de pixels de large pour la voir dans une vignette. C'est le gaspillage le plus courant et le plus simple à corriger sur un site de TPE.",
+    "correction": "Redimensionner les images à la taille réelle d'affichage avant de les mettre en ligne, ou activer la génération automatique de tailles adaptées."
+  },
+
+  "images-format-ancien": {
+    "titre": "Vos images utilisent un format dépassé",
+    "constat": "{gain_poids} d'économie possible, soit {gain_temps} de chargement, en passant les images au format WebP ou AVIF.",
+    "cout": "Les formats JPEG et PNG datent des années 1990. À qualité visuelle identique, les formats modernes pèsent souvent moitié moins. Vos visiteurs téléchargent donc le double de ce qui serait nécessaire, et l'attente qui en découle se produit exactement au moment où ils découvrent votre offre.",
+    "correction": "Convertir les images en WebP, reconnu par tous les navigateurs actuels. La plupart des CMS le font automatiquement avec une extension."
+  },
+
+  "images-non-compressees": {
+    "titre": "Vos images sont mal compressées",
+    "constat": "{gain_poids} d'économie possible sans perte visible, soit {gain_temps}.",
+    "cout": "Les fichiers embarquent des données inutiles à l'affichage. Le visiteur les télécharge quand même. La compression ne change rien à ce qu'il voit, seulement au temps qu'il attend.",
+    "correction": "Compresser les images avec un outil dédié avant la mise en ligne, ou installer une extension qui le fait à la volée."
+  },
+
+  "images-sans-chargement-differe": {
+    "titre": "Toutes vos images se chargent d'un coup",
+    "constat": "{elements} images situées plus bas dans la page sont téléchargées immédiatement.",
+    "cout": "Votre visiteur attend le chargement de photos qu'il ne verra peut-être jamais, situées tout en bas d'une page qu'il ne fera pas défiler. Ce temps est pris sur l'affichage de ce qu'il regarde vraiment, en haut de l'écran.",
+    "correction": "Activer le chargement différé, en ne l'appliquant pas aux images visibles dès l'arrivée sur la page."
+  },
+
+  "images-sans-dimensions": {
+    "titre": "Vos images n'ont pas de dimensions déclarées",
+    "constat": "{elements} images ne précisent ni largeur ni hauteur.",
+    "cout": "Le navigateur ignore la place à réserver tant que l'image n'est pas arrivée. Il affiche donc le texte, puis le pousse vers le bas quand la photo apparaît. C'est la cause principale des pages qui sautent pendant le chargement.",
+    "correction": "Indiquer la largeur et la hauteur sur chaque image, ou réserver l'espace en CSS."
+  },
+
+  "ressources-bloquantes": {
+    "titre": "Des fichiers retardent l'affichage de votre page",
+    "constat": "{gain_temps} de retard causés par des fichiers qui bloquent l'affichage.",
+    "cout": "Le navigateur a déjà reçu le contenu de votre page mais refuse de l'afficher tant que ces fichiers ne sont pas arrivés. Votre visiteur regarde un écran blanc alors que le texte qu'il attend est déjà sur sa machine.",
+    "correction": "Différer le chargement des scripts non essentiels et intégrer directement le style minimal nécessaire au premier affichage."
+  },
+
+  "serveur-lent": {
+    "titre": "Votre serveur met du temps à répondre",
+    "constat": "{valeur} avant le premier octet de réponse.",
+    "cout": "Ce délai précède tout le reste. Avant même de commencer à télécharger votre page, le visiteur attend que votre hébergeur réagisse. Tout ce que vous optimiserez par ailleurs s'ajoutera à ce temps incompressible. C'est le symptôme classique d'un hébergement mutualisé saturé ou d'un site sans cache.",
+    "correction": "Activer un cache de pages, et envisager un hébergement plus adapté si le délai persiste. C'est le poste qui demande le plus de discernement avant d'engager des frais."
+  },
+
+  "javascript-inutilise": {
+    "titre": "Votre site charge du code qu'il n'utilise pas",
+    "constat": "{gain_poids} de JavaScript téléchargé sans être utilisé, soit {gain_temps}.",
+    "cout": "Ce code est téléchargé, puis analysé par le téléphone du visiteur, pour finalement ne servir à rien sur cette page. Sur un appareil d'entrée de gamme, cette analyse coûte plus cher que le téléchargement lui-même. C'est la trace habituelle d'extensions installées puis oubliées, ou d'un thème qui charge tout partout.",
+    "correction": "Désactiver les extensions inutilisées et ne charger les scripts que sur les pages qui en ont besoin."
+  },
+
+  "css-inutilise": {
+    "titre": "Votre site charge des styles qu'il n'utilise pas",
+    "constat": "{gain_poids} de CSS inutile, soit {gain_temps}.",
+    "cout": "Comme pour le code, ces règles de mise en forme sont téléchargées et traitées avant l'affichage, sans jamais servir sur cette page. Le visiteur paie en attente le style de pages qu'il ne visite pas.",
+    "correction": "Limiter les feuilles de style chargées à ce dont chaque page a besoin."
+  },
+
+  "compression-absente": {
+    "titre": "Vos fichiers sont envoyés sans compression",
+    "constat": "{gain_poids} d'économie immédiate, soit {gain_temps}.",
+    "cout": "La compression à la volée divise typiquement par trois ou quatre le poids des fichiers texte. Elle se règle une fois sur le serveur, ne change rien au site, et ne demande aucune maintenance. C'est le meilleur rapport entre le gain et l'effort de tout ce rapport.",
+    "correction": "Activer gzip ou brotli dans la configuration du serveur."
+  },
+
+  "cache-mal-configure": {
+    "titre": "Vos visiteurs retéléchargent tout à chaque visite",
+    "constat": "{valeur} sans durée de conservation utile.",
+    "cout": "Votre logo, vos polices et vos styles ne changent pas d'une semaine à l'autre, et pourtant chaque visiteur les retélécharge à chaque passage. Le client fidèle qui consulte vos horaires deux fois par semaine attend autant la seconde fois que la première.",
+    "correction": "Définir une durée de conservation longue pour les fichiers qui ne changent pas."
+  },
+
+  "redirections-en-chaine": {
+    "titre": "Votre adresse fait rebondir le visiteur",
+    "constat": "{gain_temps} perdus en redirections successives.",
+    "cout": "Avant d'atteindre votre page, le navigateur est renvoyé d'une adresse à l'autre. Chaque rebond coûte un aller-retour réseau, particulièrement lent sur mobile. C'est de l'attente pure, sans aucune contrepartie.",
+    "correction": "Faire pointer directement vers l'adresse finale et supprimer les redirections intermédiaires."
+  },
+
+  "services-tiers-lourds": {
+    "titre": "Des services extérieurs ralentissent votre site",
+    "constat": "{valeur}",
+    "cout": "Chat en ligne, cartes, widgets d'avis, réseaux sociaux : chacun charge son propre code depuis un autre serveur, sur lequel vous n'avez aucune prise. Si l'un d'eux ralentit, votre site ralentit avec lui, et vous ne pouvez rien y faire. Il vaut la peine de vérifier ce que chacun vous rapporte réellement.",
+    "correction": "Retirer les services devenus inutiles et charger les autres seulement après l'affichage de la page."
+  },
+
+  "fontes-bloquantes": {
+    "titre": "Vos polices d'écriture retardent le texte",
+    "constat": "Des polices sont chargées depuis un serveur extérieur sans réglage d'affichage.",
+    "cout": "Le navigateur attend d'avoir reçu la police avant d'afficher le moindre mot. Votre visiteur regarde une page vide alors que le texte est déjà arrivé. Un simple réglage permet d'afficher le texte immédiatement dans une police de secours, puis de le remplacer une fois la police reçue.",
+    "correction": "Ajouter le réglage font-display swap, ou héberger les polices sur votre propre serveur."
+  },
+
+  "fontes-locales-sans-affichage": {
+    "titre": "Vos polices n'ont pas de comportement d'attente défini",
+    "constat": "{declarations} déclarations de police sur {total} sans réglage d'affichage.",
+    "cout": "Même effet que pour les polices distantes : le texte reste invisible tant que le fichier n'est pas arrivé.",
+    "correction": "Ajouter font-display swap à chaque déclaration."
+  },
+
+  "javascript-obsolete": {
+    "titre": "Votre site embarque du code pour de vieux navigateurs",
+    "constat": "{gain_poids} de code de compatibilité inutile, soit {gain_temps}.",
+    "cout": "Ce code sert à faire fonctionner le site sur des navigateurs que plus personne n'utilise. Vos visiteurs actuels le téléchargent et l'exécutent sans en tirer le moindre bénéfice.",
+    "correction": "Régler les cibles de compilation sur les navigateurs réellement utilisés par vos visiteurs."
+  },
+
+  "javascript-duplique": {
+    "titre": "Le même code est chargé plusieurs fois",
+    "constat": "{gain_poids} de code présent en double, soit {gain_temps}.",
+    "cout": "Deux extensions embarquent chacune leur copie de la même bibliothèque. Le visiteur télécharge les deux. C'est un signe assez fiable d'un site qui a accumulé les ajouts sans jamais faire le ménage.",
+    "correction": "Mutualiser les bibliothèques partagées entre les extensions."
+  },
+
+  "animations-lourdes": {
+    "titre": "Vos animations pèsent lourd",
+    "constat": "{gain_poids} d'économie possible, soit {gain_temps}.",
+    "cout": "Un GIF animé pèse couramment dix fois le poids d'une vidéo équivalente. Sur mobile, il consomme aussi la batterie de votre visiteur pendant qu'il tourne en boucle.",
+    "correction": "Remplacer les GIF animés par une vidéo au format WebM ou MP4."
+  },
+
+  "javascript-non-minifie": {
+    "titre": "Votre code n'est pas compacté",
+    "constat": "{gain_poids} d'économie, soit {gain_temps}.",
+    "cout": "Les fichiers contiennent encore les espaces et les commentaires utiles au développement, que le navigateur télécharge sans les lire. Le gain est modeste pris isolément, mais il ne coûte rien et s'ajoute aux autres.",
+    "correction": "Activer la minification, proposée par la plupart des extensions de cache."
+  },
+
+  "css-non-minifie": {
+    "titre": "Vos styles ne sont pas compactés",
+    "constat": "{gain_poids} d'économie, soit {gain_temps}.",
+    "cout": "Même principe que pour le code : de la mise en forme lisible par un développeur, téléchargée par tous vos visiteurs.",
+    "correction": "Activer la minification des feuilles de style."
+  }
+}
