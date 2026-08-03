@@ -122,7 +122,6 @@ function buildContext(finding, metrics) {
  * @returns {Promise<{findings: array, top: array, parPalier: object, inconnus: string[]}>}
  */
 export async function consolidate({ quick, lh = null }) {
-  const copy = await loadCopy();
   const metrics = lh?.metrics ?? null;
 
   const raw = [
@@ -130,6 +129,36 @@ export async function consolidate({ quick, lh = null }) {
     ...(lh?.findings ?? []),
     ...metricFindings(metrics),
   ];
+
+  return assembleFindings(raw, metrics);
+}
+
+/**
+ * Reconstruit les textes d'un enregistrement deja en cache.
+ *
+ * Le cache conserve des mesures : identifiants, indices, economies. Les
+ * phrases francaises, elles, sont reconstruites a chaque production de
+ * rapport. Sans cela, corriger une formulation dans data/copy imposerait de
+ * relancer des heures de mesures, alors que la commande `report` promet
+ * justement de regenerer en une seconde.
+ */
+export async function reconsolidate(record) {
+  const lh = record.lighthouse?.[record.profilRetenu] ?? null;
+  const stockes = record.consolidated?.findings ?? [];
+
+  const raw = stockes.map((f) => ({
+    id: f.id,
+    source: f.source,
+    savingsMs: f.savingsMs,
+    savingsBytes: f.savingsBytes,
+    evidence: f.evidence,
+  }));
+
+  return assembleFindings(raw, lh?.metrics ?? null);
+}
+
+async function assembleFindings(raw, metrics) {
+  const copy = await loadCopy();
 
   // Un meme identifiant peut arriver de plusieurs sources : on garde la plus
   // informative.

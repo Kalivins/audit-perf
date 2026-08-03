@@ -103,7 +103,8 @@ export async function runScan(file, options = {}) {
   const { writeOutputs } = await import('../report/outputs.js');
   const written = await writeOutputs(records, config, store);
 
-  log.ok(`Resultats bruts   ${c.bold(store.dirs.raw)}`);
+  log.ok(`Resultats bruts        ${c.bold(store.dirs.raw)}`);
+  log.ok(`Rapports clients       ${c.bold(written.dossier)} (${written.rapports} fichiers)`);
   log.ok(`Liste de prospection   ${c.bold(written.csv.file)} (${written.csv.lignes} lignes)`);
   log.blank();
 }

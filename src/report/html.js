@@ -1,0 +1,324 @@
+/**
+ * Rapport HTML autonome, destine au client.
+ *
+ * Principe directeur : le chiffre ne vaut que par la phrase qui l'explique.
+ * Chaque probleme est presente dans l'ordre ce qu'on a mesure, ce que ca
+ * coute, ce qu'il faut faire. Un gerant de PME doit pouvoir lire ce document
+ * en entier sans rencontrer un seul terme technique non explique.
+ *
+ * Les commentaires de ce fichier sont sans accent, comme partout dans le code.
+ * Les chaines destinees au client, elles, sont accentuees : c'est un document
+ * facture, la moindre coquille abime la confiance dans les chiffres.
+ */
+
+import { page, jauge, etiquette, section, para, classeSeuil } from './template.js';
+import {
+  escapeHtml, seconds, ms, bytes, decimal, integer, score as toScore, frenchDate,
+} from '../util/format.js';
+import { TIERS, TIER_LABELS, TIER_ORDER } from '../score/rules.js';
+import { CWV_THRESHOLDS } from '../config.js';
+import { STATUS } from '../audit/quick.js';
+
+const NOMS_JAUGES = {
+  performance: 'Performance',
+  accessibilite: 'Accessibilité',
+  bonnes_pratiques: 'Bonnes pratiques',
+  seo: 'Référencement',
+};
+
+function entete(record) {
+  const t = record.target;
+  return `<header class="entete">
+  <div class="surtitre">Audit de performance et de conformité</div>
+  <h1>${escapeHtml(t.name)}</h1>
+  <div class="url">${escapeHtml(t.url)}</div>
+  <div class="date">Analyse du ${escapeHtml(frenchDate(record.checkedAt))}</div>
+</header>`;
+}
+
+/**
+ * Le chiffre d'ouverture. Le temps d'affichage mobile est le plus parlant :
+ * c'est litteralement ce que vit le client dans la rue, sur son forfait.
+ */
+function verdict(record, lh) {
+  const lcp = lh?.metrics?.lcp;
+  const bloquants = record.consolidated?.parPalier?.[TIERS.BLOQUANT] ?? 0;
+
+  const mentionBloquants =
+    bloquants > 0
+      ? `<p class="legende"><strong>${bloquants}</strong> point${bloquants > 1 ? 's' : ''} bloquant${bloquants > 1 ? 's' : ''} ${bloquants > 1 ? 'demandent' : 'demande'} par ailleurs une correction rapide, pour des raisons juridiques ou de sécurité.</p>`
+      : '';
+
+  if (Number.isFinite(lcp)) {
+    const classe = classeSeuil(lcp, {
+      bon: CWV_THRESHOLDS.lcp.good,
+      moyen: CWV_THRESHOLDS.lcp.poor,
+    });
+    const conforme = lcp <= CWV_THRESHOLDS.lcp.good;
+    const suite = conforme
+      ? 'Vous êtes sous le seuil de 2,5 secondes considéré comme correct par Google.'
+      : 'Le seuil considéré comme correct par Google est de 2,5 secondes.';
+
+    return `<div class="verdict">
+  <div class="chiffre ${classe}">${escapeHtml(seconds(lcp))}</div>
+  <p class="legende">C'est le temps qu'attend un visiteur avant de voir l'essentiel de votre page, depuis un téléphone sur le réseau mobile. ${suite}</p>
+  ${mentionBloquants}
+</div>`;
+  }
+
+  return `<div class="verdict">
+  <div class="chiffre ${bloquants ? 'rouge' : 'vert'}">${bloquants}</div>
+  <p class="legende">point${bloquants > 1 ? 's' : ''} bloquant${bloquants > 1 ? 's' : ''} relevé${bloquants > 1 ? 's' : ''} sur votre site, de nature juridique ou technique.</p>
+</div>`;
+}
+
+function jauges(lh) {
+  if (!lh?.scores) return '';
+  const contenu = Object.entries(NOMS_JAUGES)
+    .map(([cle, nom]) => jauge(toScore(lh.scores[cle]), nom))
+    .join('\n');
+  const profil = lh.strategy === 'desktop' ? 'ordinateur' : 'téléphone mobile';
+
+  return `<div class="jauges">${contenu}</div>
+<p style="color:var(--encre-douce);font-size:0.9rem">
+Notes établies par Lighthouse, l'outil de mesure publié par Google, sur le
+profil ${escapeHtml(profil)}.</p>`;
+}
+
+/** Comparatif mobile / bureau : l'ecart est souvent l'argument le plus net. */
+function comparatif(record) {
+  const mobile = record.lighthouse?.mobile;
+  const bureau = record.lighthouse?.desktop;
+  if (!mobile?.metrics && !bureau?.metrics) return '';
+
+  const lignes = [
+    ['Note de performance', (r) => toScore(r?.scores?.performance) ?? '-'],
+    ['Affichage du contenu principal', (r) => (r?.metrics?.lcp ? seconds(r.metrics.lcp) : '-')],
+    ['Stabilité visuelle', (r) => (Number.isFinite(r?.metrics?.cls) ? decimal(r.metrics.cls) : '-')],
+    ['Blocage pendant le chargement', (r) => (Number.isFinite(r?.metrics?.tbt) ? ms(r.metrics.tbt) : '-')],
+    ['Réponse du serveur', (r) => (Number.isFinite(r?.metrics?.ttfb) ? ms(r.metrics.ttfb) : '-')],
+    ['Poids de la page', (r) => (r?.resources?.poids_total ? bytes(r.resources.poids_total) : '-')],
+    ['Nombre de fichiers chargés', (r) => (r?.resources?.requetes ? integer(r.resources.requetes) : '-')],
+  ];
+
+  const corps = lignes
+    .map(
+      ([nom, lire]) => `<tr>
+      <td>${escapeHtml(nom)}</td>
+      <td class="nombre">${escapeHtml(String(lire(mobile)))}</td>
+      <td class="nombre">${escapeHtml(String(lire(bureau)))}</td>
+    </tr>`
+    )
+    .join('\n');
+
+  return `<table class="comparatif">
+  <thead><tr><th>Mesure</th><th style="text-align:right">Téléphone</th>
+  <th style="text-align:right">Ordinateur</th></tr></thead>
+  <tbody>${corps}</tbody>
+</table>
+<p style="color:var(--encre-douce);font-size:0.9rem">
+La colonne téléphone est celle qui compte : c'est par là qu'arrive la majorité
+des visiteurs d'un commerce local, et c'est aussi la version que Google utilise
+pour classer votre site.</p>`;
+}
+
+function probleme(finding, rang) {
+  const gains = [];
+  if (Number.isFinite(finding.savingsMs) && finding.savingsMs > 0) {
+    gains.push(`${ms(finding.savingsMs)} gagnées`);
+  }
+  if (Number.isFinite(finding.savingsBytes) && finding.savingsBytes > 0) {
+    gains.push(`${bytes(finding.savingsBytes)} en moins`);
+  }
+
+  const constat = finding.texte.constat
+    ? `<div class="bloc constat"><div class="intitule">Ce que nous avons mesuré</div>
+       ${para(finding.texte.constat)}</div>`
+    : '';
+
+  return `<article class="probleme">
+  <div class="tete">
+    <span class="rang">${rang}</span>
+    <h3>${escapeHtml(finding.texte.titre)}</h3>
+    ${etiquette(TIER_LABELS[finding.tier], finding.tier)}
+    ${gains.length ? etiquette(gains.join(', '), 'gain') : ''}
+    ${etiquette(`correction ${finding.effortLabel}`, 'corriger')}
+  </div>
+  ${constat}
+  <div class="bloc cout"><div class="intitule">Ce que cela vous coûte</div>
+    ${para(finding.texte.cout)}</div>
+  <div class="bloc"><div class="intitule">Ce qu'il faut faire</div>
+    ${para(finding.texte.correction)}</div>
+  ${finding.texte.reserve ? `<div class="reserve">${escapeHtml(finding.texte.reserve)}</div>` : ''}
+</article>`;
+}
+
+function estimationGains(gains) {
+  if (!gains?.mesurable) return '';
+  const items = [];
+
+  if (gains.temps && !gains.temps.conforme) {
+    items.push([
+      'Temps à rattraper pour atteindre le seuil recommandé',
+      seconds(gains.temps.ecart_ms),
+    ]);
+  }
+  if (gains.poids) {
+    items.push(['Poids actuel de la page', bytes(gains.poids.actuel_octets)]);
+    items.push([
+      'Poids évitable identifié',
+      `${bytes(gains.poids.evitable_octets)} (${Math.round(gains.poids.part_evitable * 100)} %)`,
+    ]);
+    items.push([
+      'Attente en moins sur le réseau mobile',
+      `${gains.poids.secondes_4g_economisees.toFixed(1).replace('.', ',')} s`,
+    ]);
+  }
+  if (!items.length) return '';
+
+  const liste = items
+    .map(
+      ([nom, valeur]) =>
+        `<li><span>${escapeHtml(nom)}</span><span class="valeur">${escapeHtml(valeur)}</span></li>`
+    )
+    .join('\n');
+
+  const audience = gains.audience
+    ? `<div class="reserve"><strong>Sur votre trafic déclaré de
+       ${integer(gains.audience.trafic_mensuel)} visites par mois</strong>, la probabilité
+       qu'un visiteur reparte sans rien faire augmente d'environ
+       ${gains.audience.hausse_rebond_pct} % par rapport à ${escapeHtml(gains.audience.reference)}.
+       ${escapeHtml(gains.audience.reserve)} Source : ${escapeHtml(gains.audience.source)}.</div>`
+    : `<div class="reserve">L'effet sur votre chiffre d'affaires n'est pas chiffré ici :
+       il demande vos volumes de visites et votre taux de transformation réels.
+       C'est le premier point à regarder ensemble.</div>`;
+
+  const methodeGain = gains.poids?.methode
+    ? `<p style="color:var(--encre-douce);font-size:0.85rem">${escapeHtml(gains.poids.methode)}</p>`
+    : '';
+
+  return `<ul class="gain-liste">${liste}</ul>\n${methodeGain}\n${audience}`;
+}
+
+function autresProblemes(findings) {
+  if (!findings.length) return '';
+
+  return TIER_ORDER.map((tier) => {
+    const liste = findings.filter((f) => f.tier === tier);
+    if (!liste.length) return '';
+    const items = liste
+      .map(
+        (f) => `<li>
+        <span class="titre">${escapeHtml(f.texte.titre)}</span>
+        ${etiquette(`correction ${f.effortLabel}`, 'corriger')}
+        ${f.texte.constat ? `<span class="detail">${escapeHtml(f.texte.constat)}</span>` : ''}
+      </li>`
+      )
+      .join('\n');
+    return `<details>
+  <summary>${escapeHtml(TIER_LABELS[tier])} : ${liste.length} point${liste.length > 1 ? 's' : ''}</summary>
+  <div class="contenu"><ul class="reste">${items}</ul></div>
+</details>`;
+  }).join('\n');
+}
+
+function annexe(record, lh) {
+  const stack = record.quick?.summary?.stack;
+  const traceurs = record.quick?.summary?.traceurs;
+  const lignes = [];
+
+  if (stack?.resume) lignes.push(['Technique détectée', stack.resume]);
+  if (stack?.php) lignes.push(['Version de PHP', stack.php]);
+  if (traceurs?.trackers?.length) lignes.push(['Traceurs', traceurs.trackers.join(', ')]);
+  if (traceurs?.consent?.length) lignes.push(['Recueil du consentement', traceurs.consent.join(', ')]);
+  if (record.quick?.summary?.serveur) lignes.push(['Serveur', record.quick.summary.serveur]);
+  if (lh?.lighthouseVersion) lignes.push(['Version de Lighthouse', lh.lighthouseVersion]);
+
+  if (!lignes.length) return '';
+
+  const corps = lignes
+    .map(
+      ([nom, valeur]) =>
+        `<tr><td>${escapeHtml(nom)}</td><td class="nombre">${escapeHtml(String(valeur))}</td></tr>`
+    )
+    .join('\n');
+
+  return `<details>
+  <summary>Détails techniques</summary>
+  <div class="contenu"><table class="comparatif"><tbody>${corps}</tbody></table></div>
+</details>`;
+}
+
+function methode(record, gains) {
+  const sources = gains?.sources?.length
+    ? `<p>Sources des chiffres avancés :</p><ul>${gains.sources
+        .map((s) => `<li>${escapeHtml(s)}</li>`)
+        .join('')}</ul>`
+    : '';
+
+  return `<div class="note">
+  <p><strong>Comment cet audit a été réalisé.</strong> Les mesures proviennent de
+  Lighthouse, l'outil publié par Google, exécuté sur un navigateur Chrome piloté
+  depuis notre poste. Le profil téléphone simule une connexion mobile et un
+  appareil courant, ce qui correspond à la situation réelle de la plupart de vos
+  visiteurs. Les conformités juridiques sont vérifiées sur votre page d'accueil.</p>
+  <p>La réactivité au clic est approchée par une mesure de laboratoire. La
+  métrique de terrain équivalente demande des données issues de vos visiteurs
+  réels, dont nous ne disposons pas ici.</p>
+  <p>Les temps de chargement varient d'une mesure à l'autre selon la charge du
+  serveur et du réseau. Les écarts importants sont significatifs, quelques
+  dixièmes de seconde ne le sont pas.</p>
+  ${sources}
+  <p>Analyse du ${escapeHtml(frenchDate(record.checkedAt))} sur
+  <code>${escapeHtml(record.quick?.page?.url ?? record.target.url)}</code>.</p>
+</div>`;
+}
+
+/** Site injoignable : un rapport court et honnete, sans chiffres inventes. */
+function rapportIndisponible(record, libelle) {
+  return page({
+    titre: `Audit ${record.target.name}`,
+    corps: `${entete(record)}
+<div class="verdict">
+  <div class="chiffre rouge">Site injoignable</div>
+  <p class="legende">Nous n'avons pas pu analyser ce site : ${escapeHtml(libelle)}.
+  ${escapeHtml(record.detail ?? '')}</p>
+</div>
+<p>Tant que le site ne répond pas à une requête standard, aucune mesure ne peut
+être produite. C'est en soi un constat : ce que nous voyons est ce que voient
+également les moteurs de recherche et une partie de vos visiteurs.</p>
+${methode(record, null)}`,
+  });
+}
+
+/**
+ * @param {object} record enregistrement complet d'une cible
+ * @param {{statusLabel?: string}} options
+ * @returns {string} document HTML complet
+ */
+export function buildReport(record, options = {}) {
+  const mesurable = record.status === STATUS.OK || record.status === STATUS.EMPTY;
+  if (!mesurable) {
+    return rapportIndisponible(record, options.statusLabel ?? record.status);
+  }
+
+  const lh = record.lighthouse?.[record.profilRetenu] ?? null;
+  const top = record.consolidated?.top ?? [];
+  const reste = (record.consolidated?.findings ?? []).slice(top.length);
+
+  const corps = [
+    entete(record),
+    verdict(record, lh),
+    jauges(lh),
+    section('Les cinq points les plus coûteux', top.map((f, i) => probleme(f, i + 1)).join('\n')),
+    section('Ce que vous pouvez gagner', estimationGains(record.gains)),
+    section('Téléphone et ordinateur', comparatif(record)),
+    section('Le reste des points relevés', autresProblemes(reste)),
+    annexe(record, lh),
+    methode(record, record.gains),
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+
+  return page({ titre: `Audit ${record.target.name}`, corps });
+}

@@ -22,11 +22,12 @@
 
 import { CWV_THRESHOLDS } from '../config.js';
 
+/** Ces libelles figurent tels quels dans le rapport client, d'ou les accents. */
 export const SOURCES = {
-  cwv: 'Seuils Core Web Vitals publies par Google',
-  debit: 'Debit de la 4G simulee par Lighthouse, 1 638 kbit/s',
+  cwv: 'Seuils Core Web Vitals publiés par Google',
+  debit: 'Débit de la 4G simulée par Lighthouse, 1 638 kbit/s',
   rebond: 'Google et SOASTA, The State of Online Retail Performance, 2017',
-  lighthouse: 'Economies estimees par Lighthouse',
+  lighthouse: 'Économies estimées par Lighthouse',
 };
 
 /** Debit exact de la 4G simulee par Lighthouse en profil mobile, en kbit/s. */
@@ -182,8 +183,8 @@ export function estimateGains({ lh, findings = [], target = {} }) {
         [...parFamille.entries()].map(([famille, f]) => [famille, f.octets])
       ),
       methode:
-        'Plus grosse economie retenue par famille de fichiers, puis addition des familles. ' +
-        'Les economies portant sur les memes fichiers ne sont pas cumulees.',
+        'Plus grosse économie retenue par famille de fichiers, puis addition des ' +
+        'familles. Les économies portant sur les mêmes fichiers ne sont pas cumulées.',
       source: `${SOURCES.lighthouse}. ${SOURCES.debit}`,
     };
     gains.sources.push(SOURCES.lighthouse, SOURCES.debit);
@@ -205,8 +206,9 @@ export function estimateGains({ lh, findings = [], target = {} }) {
         reference: 'un chargement en 1 seconde',
         source: SOURCES.rebond,
         reserve:
-          'Ordre de grandeur issu d\'une etude sectorielle, applique a votre trafic declare. ' +
-          'Il indique une tendance et ne remplace pas la mesure de vos propres statistiques.',
+          "Ordre de grandeur issu d'une étude sectorielle, appliqué à votre trafic " +
+          'déclaré. Il indique une tendance et ne remplace pas la mesure de vos ' +
+          'propres statistiques.',
       };
       gains.sources.push(SOURCES.rebond);
     }

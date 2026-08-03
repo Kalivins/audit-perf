@@ -29,6 +29,7 @@ export async function runReport(options = {}) {
 
   const written = await writeOutputs(records, config, store);
 
+  log.ok(`Rapports clients       ${c.bold(written.dossier)} (${written.rapports} fichiers)`);
   log.ok(`Liste de prospection   ${c.bold(written.csv.file)} (${written.csv.lignes} lignes)`);
   log.blank();
 }

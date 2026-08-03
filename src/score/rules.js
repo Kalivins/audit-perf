@@ -20,10 +20,11 @@ export const TIERS = {
   CORRIGER: 'corriger',
 };
 
+/** Libelles affiches au client : accentues, contrairement au reste du code. */
 export const TIER_LABELS = {
   [TIERS.BLOQUANT]: 'Bloquant',
-  [TIERS.COUTEUX]: 'Couteux',
-  [TIERS.CORRIGER]: 'A corriger',
+  [TIERS.COUTEUX]: 'Coûteux',
+  [TIERS.CORRIGER]: 'À corriger',
 };
 
 /** Ordre d'affichage des paliers. */
