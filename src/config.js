@@ -17,6 +17,14 @@ export const VERSION = '0.1.0';
 export const DEFAULT_USER_AGENT =
   `audit-perf/${VERSION} (+https://github.com/kevillard/audit-perf)`;
 
+/**
+ * Jeton court utilise pour interroger le robots.txt. Un fichier robots.txt
+ * declare des groupes par nom de produit ("User-agent: audit-perf"), pas par
+ * chaine complete : passer l'UA entier ferait manquer les regles qui nous
+ * visent explicitement.
+ */
+export const USER_AGENT_TOKEN = 'audit-perf';
+
 export const DEFAULTS = {
   out: './out',
   concurrency: 8,
