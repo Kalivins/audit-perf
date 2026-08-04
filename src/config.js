@@ -25,6 +25,24 @@ export const DEFAULT_USER_AGENT =
  */
 export const USER_AGENT_TOKEN = 'audit-perf';
 
+/**
+ * User-agent de repli.
+ *
+ * Beaucoup d'hebergeurs mutualises ecartent par defaut tout client qui ne
+ * ressemble pas a un navigateur, sans que le proprietaire du site l'ait
+ * decide. Sur le lot d'essai, trois cibles sur seize etaient perdues ainsi :
+ * l'une repondait 403, deux faisaient trainer la connexion jusqu'au delai
+ * maximal alors qu'un navigateur obtenait la page en trois cents
+ * millisecondes.
+ *
+ * Ce repli ne sert qu'apres un refus, il est trace dans les sorties, et il ne
+ * touche pas au robots.txt : le seul signal par lequel un site exprime
+ * vraiment sa politique reste respecte a la lettre.
+ */
+export const USER_AGENT_REPLI =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+  '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
 export const DEFAULTS = {
   out: './out',
   concurrency: 8,
@@ -39,6 +57,7 @@ export const DEFAULTS = {
   limit: null,
   ignoreRobots: false,
   userAgent: DEFAULT_USER_AGENT,
+  repliNavigateur: true,
   crux: false,
   /**
    * Pages secondaires auditees en plus de l'accueil. Chacune coute une requete
@@ -97,6 +116,10 @@ export function buildConfig(raw = {}) {
     limit: raw.limit == null ? null : toInt(raw.limit, 0, { min: 1 }),
     ignoreRobots: Boolean(raw.ignoreRobots),
     userAgent: raw.userAgent || DEFAULTS.userAgent,
+    // commander passe repliNavigateur a false quand --no-repli-navigateur est
+    // fourni ; absent, l'option vaut undefined et le defaut s'applique.
+    repliNavigateur: raw.repliNavigateur !== false,
+    uaRepli: raw.repliNavigateur !== false ? USER_AGENT_REPLI : null,
     crux: Boolean(raw.crux),
     cruxKey: raw.cruxKey || process.env.CRUX_API_KEY || null,
     csvDelimiter: raw.csvDelimiter || DEFAULTS.csvDelimiter,

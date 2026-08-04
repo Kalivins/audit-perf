@@ -32,8 +32,18 @@ export const STATUS = {
   ROBOTS: 'bloque_robots',
   ROBOTS_UNREACHABLE: 'robots_injoignable',
   HTTP_ERROR: 'erreur_http',
+  /**
+   * Le serveur nous refuse explicitement, sans que le site soit en panne.
+   * A distinguer d'une erreur : la cible est vivante et joignable par un
+   * navigateur ordinaire, elle ne doit pas etre rangee parmi les domaines
+   * morts ou l'on cesserait de la considerer.
+   */
+  REFUSED: 'acces_refuse',
   EMPTY: 'contenu_vide',
 };
+
+/** Codes par lesquels un serveur ecarte un client automatise. */
+const CODES_REFUS = new Set([401, 403, 405, 406, 429]);
 
 /**
  * En dessous de ce seuil, et sans balise structurante, le document renvoye ne
@@ -69,6 +79,7 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
     userAgent: config.userAgent,
     timeout: config.timeout,
     retries: config.retries,
+    uaRepli: config.uaRepli,
   };
 
   const verdict = await robots.check(target.url);
@@ -91,6 +102,13 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
     return failure(target, page.error, `${target.url} injoignable`);
   }
   if (!page.ok) {
+    if (CODES_REFUS.has(page.status)) {
+      return failure(
+        target,
+        STATUS.REFUSED,
+        `le serveur repond ${page.status} a notre user-agent`
+      );
+    }
     return failure(target, STATUS.HTTP_ERROR, `reponse ${page.status}`);
   }
 
@@ -151,6 +169,10 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
     serveur: page.headers.server ?? null,
     url_finale: page.url,
     redirige: page.redirected,
+    // Trace du repli : le site a ecarte notre user-agent identifiable et n'a
+    // repondu qu'a un user-agent de navigateur.
+    ua_repli: Boolean(page.uaRepli),
+    refus_initial: page.refusInitial ?? null,
   };
 
   findings.push(...checkHttps({ page, redirect }));
@@ -321,6 +343,7 @@ export const STATUS_LABELS = {
   [STATUS.ROBOTS]: 'exclu par robots.txt',
   [STATUS.ROBOTS_UNREACHABLE]: 'robots.txt injoignable',
   [STATUS.HTTP_ERROR]: 'erreur HTTP',
+  [STATUS.REFUSED]: 'acces refuse au robot',
   [STATUS.EMPTY]: 'page vide',
   [ERRORS.TIMEOUT]: 'delai depasse',
   [ERRORS.DNS]: 'domaine introuvable',

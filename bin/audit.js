@@ -69,6 +69,10 @@ program
   .option('-f, --force', 'ignorer le cache et tout reanalyser')
   .option('--ignore-robots', 'passer outre le robots.txt (vos propres sites uniquement)')
   .option('--user-agent <chaine>', 'user-agent a annoncer')
+  .option(
+    '--no-repli-navigateur',
+    'ne pas reessayer avec un user-agent de navigateur quand un serveur ecarte le notre'
+  )
   .option('--csv-delimiter <car>', 'separateur du CSV produit', ';')
   .option(
     '--crux',

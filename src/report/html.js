@@ -270,10 +270,29 @@ function methode(record, gains) {
   serveur et du réseau. Les écarts importants sont significatifs, quelques
   dixièmes de seconde ne le sont pas.</p>
   ${sources}
+  ${mentionRepli(record)}
   ${pagesExaminees(record)}
   <p>Analyse du ${escapeHtml(frenchDate(record.checkedAt))} sur
   <code>${escapeHtml(record.quick?.page?.url ?? record.target.url)}</code>.</p>
 </div>`;
+}
+
+/**
+ * Mention du repli de user-agent.
+ *
+ * C'est la contrepartie du procede : s'il n'est pas ecrit dans le rapport, il
+ * n'a pas a exister. Et l'information interesse le client, qui ignore souvent
+ * que son hebergeur ecarte les outils d'analyse.
+ */
+function mentionRepli(record) {
+  if (!record.quick?.summary?.ua_repli) return '';
+
+  return `<p>Votre hébergeur a d'abord écarté notre outil d'analyse, qui
+  s'identifie comme tel. Nous avons donc relevé les mesures en nous présentant
+  comme un navigateur ordinaire, exactement comme le fait un de vos visiteurs.
+  Ce filtrage est un réglage courant de l'hébergement : il n'a probablement
+  jamais été décidé par vous, mais il écarte de la même façon certains outils
+  de référencement et de surveillance.</p>`;
 }
 
 /**

@@ -108,16 +108,45 @@ export async function request(url, options = {}) {
   }
 }
 
-/** Reessaie une fois sur erreur reseau transitoire, jamais sur un 4xx. */
-export async function requestWithRetry(url, options = {}) {
-  const { retries = 1, ...rest } = options;
-  let last = await request(url, rest);
+/** Codes par lesquels un serveur ecarte un client qui n'est pas un navigateur. */
+const CODES_REFUS = new Set([401, 403, 405, 406, 429]);
 
+/**
+ * Le serveur nous a-t-il ecartes ?
+ *
+ * Le delai depasse compte, et ce n'est pas une supposition : sur le lot
+ * d'essai, deux hebergeurs servaient leur robots.txt en cent millisecondes a
+ * notre user-agent puis laissaient trainer la page d'accueil jusqu'au bout du
+ * delai. Faire trainer coute moins cher a un pare-feu que repondre 403, et se
+ * confond avec un serveur lent.
+ */
+function estUnRefus(reponse) {
+  return reponse.error === ERRORS.TIMEOUT || CODES_REFUS.has(reponse.status);
+}
+
+/**
+ * Reessaie sur erreur transitoire, et bascule une seule fois sur le
+ * user-agent de repli quand le serveur nous ecarte.
+ *
+ * L'ordre compte : devant un refus on change de user-agent tout de suite,
+ * plutot que de reessayer a l'identique. Insister avec un UA deja refuse ne
+ * sert a rien et, sur un serveur qui fait trainer, coute un delai complet de
+ * plus par tentative.
+ */
+export async function requestWithRetry(url, options = {}) {
+  const { retries = 1, uaRepli = null, ...rest } = options;
+  const premiere = await request(url, rest);
+  if (premiere.ok) return premiere;
+
+  if (uaRepli && uaRepli !== rest.userAgent && estUnRefus(premiere)) {
+    const repli = await request(url, { ...rest, userAgent: uaRepli });
+    if (repli.ok) return { ...repli, repli: true, refusInitial: premiere.status || premiere.error };
+  }
+
+  let last = premiere;
   for (let attempt = 0; attempt < retries; attempt += 1) {
     const transient =
-      last.error === ERRORS.TIMEOUT ||
-      last.error === ERRORS.NETWORK ||
-      last.error === ERRORS.REFUSED;
+      last.error === ERRORS.NETWORK || last.error === ERRORS.REFUSED;
     if (!transient) break;
     await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
     last = await request(url, rest);
@@ -153,7 +182,14 @@ export async function fetchHomepage(url, options = {}) {
     }
   }
 
-  return { ...response, httpsAvailable, fellBackToHttp };
+  return {
+    ...response,
+    httpsAvailable,
+    fellBackToHttp,
+    // Le site a-t-il exige un user-agent de navigateur pour repondre ?
+    uaRepli: Boolean(response.repli),
+    refusInitial: response.refusInitial ?? null,
+  };
 }
 
 /**

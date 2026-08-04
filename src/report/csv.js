@@ -32,6 +32,7 @@ const COLONNES = [
   'automatisation_en_place',
   'automatisation_manquante',
   'rang_secteur',
+  'ua_repli',
   'pages_auditees',
   'pages_site',
   'liens_morts',
@@ -110,6 +111,7 @@ function ligne(record, index, reportPath) {
     rang_secteur: record.comparaison
       ? `${record.comparaison.rang}/${record.comparaison.total}`
       : '',
+    ua_repli: record.quick?.summary?.ua_repli ? 'oui' : '',
     pages_auditees: record.quick?.summary?.pages?.examinees ?? '',
     pages_site: record.quick?.summary?.sitemap?.pages ?? '',
     liens_morts: record.quick?.summary?.liens?.morts?.length ?? '',

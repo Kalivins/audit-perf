@@ -34,6 +34,7 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
   const robots = createRobotsCache({
     userAgent: config.userAgent,
     userAgentToken: USER_AGENT_TOKEN,
+    uaRepli: config.uaRepli,
     timeout: config.timeout,
     ignore: config.ignoreRobots,
     scheduler,

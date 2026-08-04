@@ -12,7 +12,7 @@
  */
 
 import robotsParser from 'robots-parser';
-import { request } from './http.js';
+import { requestWithRetry } from './http.js';
 import { hostOf } from './politeness.js';
 
 export const ROBOTS_STATUS = {
@@ -24,6 +24,7 @@ export const ROBOTS_STATUS = {
 export function createRobotsCache({
   userAgent,
   userAgentToken,
+  uaRepli = null,
   timeout = 15000,
   ignore = false,
   scheduler = null,
@@ -33,7 +34,11 @@ export function createRobotsCache({
 
   async function fetchRobots(origin) {
     const url = `${origin}/robots.txt`;
-    const doFetch = () => request(url, { userAgent, timeout });
+    // Un reessai, parce que les consequences d'un echec sont lourdes : la RFC
+    // impose de s'abstenir quand le fichier est injoignable, et un incident
+    // passager ferait alors perdre definitivement une cible joignable.
+    const doFetch = () =>
+      requestWithRetry(url, { userAgent, timeout, retries: 1, uaRepli });
     const response = scheduler
       ? await scheduler.run(hostOf(origin), doFetch)
       : await doFetch();

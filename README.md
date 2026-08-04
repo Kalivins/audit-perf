@@ -220,6 +220,17 @@ hébergeur l'impression d'un scraper agressif.
   2 secondes, indépendamment de la concurrence globale.
 - User-agent identifiable, à personnaliser dans `src/config.js` avec vos
   coordonnées.
+- **Repli tracé** : beaucoup d'hébergements mutualisés écartent par défaut
+  tout client qui ne ressemble pas à un navigateur, sans que le propriétaire
+  du site l'ait décidé. Sur le lot d'essai, 3 cibles sur 16 étaient perdues
+  ainsi, dont deux qui faisaient traîner la connexion jusqu'au délai maximal
+  alors qu'un navigateur obtenait la page en 300 ms. L'outil demande donc
+  d'abord avec son user-agent identifiable et, en cas de refus seulement,
+  réessaie une fois en se présentant comme un navigateur. Le fait est inscrit
+  dans le CSV (`ua_repli`) et dans le rapport client. `--no-repli-navigateur`
+  pour désactiver.
+  Le `robots.txt`, lui, reste respecté à la lettre dans tous les cas : c'est le
+  seul signal par lequel un site exprime réellement sa politique.
 - Une seule page visitée par site, plus quelques requêtes `HEAD` pour vérifier
   les pages légales.
 
