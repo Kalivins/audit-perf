@@ -270,9 +270,37 @@ function methode(record, gains) {
   serveur et du réseau. Les écarts importants sont significatifs, quelques
   dixièmes de seconde ne le sont pas.</p>
   ${sources}
+  ${pagesExaminees(record)}
   <p>Analyse du ${escapeHtml(frenchDate(record.checkedAt))} sur
   <code>${escapeHtml(record.quick?.page?.url ?? record.target.url)}</code>.</p>
 </div>`;
+}
+
+/**
+ * Le perimetre exact de l'audit. Le client doit savoir ce qui a ete regarde,
+ * et donc ce qui ne l'a pas ete : un constat annonce sur quatre pages ne dit
+ * rien des quarante autres.
+ */
+function pagesExaminees(record) {
+  const pages = record.quick?.summary?.pages;
+  if (!pages) return '';
+
+  const visitees = (pages.secondaires ?? []).filter((p) => p.ok);
+  if (!visitees.length) {
+    return `<p>Cet audit porte sur votre page d'accueil. Nous n'avons pas trouvé
+    d'autre page à examiner depuis celle-ci.</p>`;
+  }
+
+  const total = record.quick?.summary?.sitemap?.pages;
+  const precision =
+    Number.isFinite(total) && total > visitees.length + 1
+      ? ` Votre site en compte ${integer(total)} au total : les constats
+        présentés ici valent pour les pages examinées, et il est probable que
+        les mêmes se retrouvent ailleurs.`
+      : '';
+
+  return `<p>Cet audit porte sur ${visitees.length + 1} pages : votre accueil,
+  ainsi que ${escapeHtml(visitees.map((p) => p.libelle).join(', '))}.${precision}</p>`;
 }
 
 /**

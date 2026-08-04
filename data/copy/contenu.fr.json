@@ -14,6 +14,13 @@
     "reserve": "Constat établi depuis une requête standard. Un navigateur complet peut afficher la page normalement, ce point doit être confirmé de visu."
   },
 
+  "page-liee-introuvable": {
+    "titre": "Un lien de votre menu mène à une page d'erreur",
+    "constat": "La page « {page} » ({adresse}) répond {statut}.",
+    "cout": "Ce lien est visible sur votre site et un visiteur qui clique dessus tombe sur une page d'erreur. S'il s'agit de votre page de contact, chaque visiteur qui voulait vous écrire est perdu, et vous ne le saurez jamais puisqu'aucune demande ne vous parvient. Les moteurs de recherche interprètent aussi ces impasses comme un signe d'abandon du site.",
+    "correction": "Rétablir la page, ou corriger le lien pour qu'il pointe vers l'adresse actuelle."
+  },
+
   "code-http-anormal": {
     "titre": "Votre page renvoie un code d'erreur",
     "constat": "{valeur}",

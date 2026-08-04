@@ -14,11 +14,20 @@ import { hostOf } from '../../net/politeness.js';
 
 const CHEMINS_USUELS = ['/sitemap.xml', '/sitemap_index.xml'];
 
+/** Nombre d'adresses conservees pour alimenter le choix des pages a auditer. */
+const ECHANTILLON_MAX = 60;
+
 /** Comptage sans analyseur XML : on ne cherche que des balises connues. */
 function analyser(xml) {
   const estIndex = /<sitemapindex[\s>]/i.test(xml);
-  const locs = xml.match(/<loc>/gi)?.length ?? 0;
-  return { estIndex, entrees: locs };
+  const adresses = [...xml.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/gi)].map((m) => m[1]);
+  return {
+    estIndex,
+    entrees: adresses.length,
+    // Un index liste des sitemaps, pas des pages : ses adresses ne servent
+    // pas a choisir quoi auditer.
+    echantillon: estIndex ? [] : adresses.slice(0, ECHANTILLON_MAX),
+  };
 }
 
 export async function checkSitemap({ baseUrl, declares = [], scheduler, httpOptions }) {
@@ -43,9 +52,10 @@ export async function checkSitemap({ baseUrl, declares = [], scheduler, httpOpti
       : await scheduler.run(hostOf(url), () => request(url, httpOptions));
     if (!/<(urlset|sitemapindex)[\s>]/i.test(contenu.body ?? '')) continue;
 
-    const { estIndex, entrees } = analyser(contenu.body);
+    const { estIndex, entrees, echantillon } = analyser(contenu.body);
     return {
       findings: [],
+      adresses: echantillon,
       summary: {
         present: true,
         url,
@@ -60,6 +70,7 @@ export async function checkSitemap({ baseUrl, declares = [], scheduler, httpOpti
 
   return {
     findings: [{ id: 'sitemap-absent', source: 'html', evidence: {} }],
+    adresses: [],
     summary: { present: false, url: null, pages: null },
   };
 }

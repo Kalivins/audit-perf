@@ -54,6 +54,11 @@ program
   .option('--delay <ms>', 'delai minimal entre deux requetes vers un meme domaine', '2000')
   .option('--timeout <ms>', 'delai maximal par requete', '30000')
   .option('--strategies <liste>', 'mobile, desktop, ou les deux', 'mobile,desktop')
+  .option(
+    '--pages <n>',
+    'pages secondaires auditees en plus de l\'accueil (0 pour l\'accueil seul)',
+    '4'
+  )
   .option('--limit <n>', 'ne traiter que les n premieres cibles')
   .option('--max-age <jours>', 'reanalyser au dela de cet age')
   .option('-f, --force', 'ignorer le cache et tout reanalyser')

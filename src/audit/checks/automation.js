@@ -153,35 +153,64 @@ function lireElementsCliquables(dom, baseUrl) {
   return { trouve, trompeurs };
 }
 
-export async function checkAutomation({ dom, html, target, baseUrl, stack = null }) {
-  const { plateformes, attendus, capacites } = await config();
+/**
+ * Releve les dispositifs presents sur UNE page.
+ *
+ * Separe de la conclusion, parce qu'un artisan met souvent son formulaire de
+ * devis sur sa page contact et non sur son accueil. Conclure page par page
+ * ferait annoncer au client un manque qu'il n'a pas.
+ */
+export async function detecterCapacites({ dom, html, baseUrl, stack = null }) {
+  const { plateformes } = await config();
   const bas = html.toLowerCase();
 
-  const enPlace = new Set();
+  const capacites = new Set();
   const outils = [];
 
   for (const plateforme of plateformes) {
     if (!plateforme.indices.some((indice) => bas.includes(indice.toLowerCase()))) continue;
-    enPlace.add(plateforme.capacite);
+    capacites.add(plateforme.capacite);
     outils.push({ nom: plateforme.nom, capacite: plateforme.capacite });
   }
 
   const formulaires = lireFormulaires(dom);
-  if (formulaires.contact) enPlace.add('contact');
-  if (formulaires.devis) enPlace.add('devis');
-  if (formulaires.newsletter) enPlace.add('newsletter');
+  if (formulaires.contact) capacites.add('contact');
+  if (formulaires.devis) capacites.add('devis');
+  if (formulaires.newsletter) capacites.add('newsletter');
 
   // L'adresse reellement servie, pas celle saisie : une redirection vers www
   // ferait autrement passer les liens internes pour des services externes.
-  const { trouve, trompeurs } = lireElementsCliquables(dom, baseUrl ?? target?.url);
-  for (const capacite of Object.keys(trouve)) enPlace.add(capacite);
+  const { trouve, trompeurs } = lireElementsCliquables(dom, baseUrl);
+  for (const capacite of Object.keys(trouve)) capacites.add(capacite);
 
   // Une boutique en ligne implique la commande et le paiement, meme sans
-  // qu'aucun prestataire de paiement soit visible sur la page d'accueil.
+  // qu'aucun prestataire de paiement soit visible sur la page.
   if (stack?.ecommerce?.length) {
-    enPlace.add('commande');
-    enPlace.add('paiement');
+    capacites.add('commande');
+    capacites.add('paiement');
   }
+
+  return { capacites: [...capacites], outils, trompeurs };
+}
+
+/** Conclut sur l'ensemble des pages examinees. */
+export async function conclureAutomation({ detections = [], target }) {
+  const { attendus, capacites: libelles } = await config();
+
+  const enPlace = new Set();
+  const outils = [];
+  const trompeursBruts = {};
+
+  for (const detection of detections) {
+    for (const capacite of detection.capacites) enPlace.add(capacite);
+    outils.push(...detection.outils);
+    Object.assign(trompeursBruts, detection.trompeurs);
+  }
+
+  // Un intitule trompeur ne compte que si le dispositif est absent partout.
+  const trompeurs = Object.fromEntries(
+    Object.entries(trompeursBruts).filter(([capacite]) => !enPlace.has(capacite))
+  );
 
   const secteur = canoniser(target?.sector, target?.name);
   const attendusSecteur = attendus[secteur] ?? attendus.autre;
@@ -211,16 +240,17 @@ export async function checkAutomation({ dom, html, target, baseUrl, stack = null
     findings,
     summary: {
       secteur,
-      en_place: [...enPlace].map((c) => capacites[c] ?? c),
+      en_place: [...enPlace].map((c) => libelles[c] ?? c),
       capacites: [...enPlace],
       manquants,
-      manquants_libelles: manquants.map((c) => capacites[c] ?? c),
-      outils,
+      manquants_libelles: manquants.map((c) => libelles[c] ?? c),
+      // Un meme outil peut apparaitre sur plusieurs pages.
+      outils: [...new Map(outils.map((o) => [o.nom, o])).values()],
       // Intitules qui promettent un dispositif sans le fournir. C'est le cas
       // le plus vendable : le gerant croit avoir automatise.
       trompeurs: Object.entries(trompeurs).map(([capacite, intitule]) => ({
         capacite,
-        libelle: capacites[capacite] ?? capacite,
+        libelle: libelles[capacite] ?? capacite,
         intitule,
       })),
     },

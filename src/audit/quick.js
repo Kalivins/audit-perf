@@ -20,7 +20,9 @@ import { detectStack } from './checks/stack.js';
 import { checkHeaders } from './checks/headers.js';
 import { checkStructuredData } from './checks/structured.js';
 import { checkSitemap } from './checks/sitemap.js';
-import { checkAutomation } from './checks/automation.js';
+import { detecterCapacites, conclureAutomation } from './checks/automation.js';
+import { choisirPages } from './pages.js';
+import { chargerPage, auditerPage, regrouperParPage } from './page.js';
 import { inspectCertificate, checkCertificate } from '../net/tls.js';
 import { inspectDns, checkDns } from '../net/dns.js';
 
@@ -151,11 +153,16 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   };
 
   findings.push(...checkHttps({ page, redirect }));
-  findings.push(...checkViewport({ dom }));
-  findings.push(...checkMeta({ dom }));
+
+  // Constats de contenu de l'accueil. Ceux des pages secondaires viendront
+  // s'y agreger plus bas, sous le meme identifiant.
+  const findingsAccueil = [
+    ...checkViewport({ dom }),
+    ...checkMeta({ dom }),
+  ];
 
   const images = checkImages({ dom });
-  findings.push(...images.findings);
+  findingsAccueil.push(...images.findings);
   summary.images = images.summary;
 
   const fonts = checkFonts({ dom, html });
@@ -197,16 +204,6 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   findings.push(...structurees.findings);
   summary.donnees_structurees = structurees.summary;
 
-  const automatisation = await checkAutomation({
-    dom,
-    html,
-    target,
-    baseUrl: page.url,
-    stack: stack.summary,
-  });
-  findings.push(...automatisation.findings);
-  summary.automatisation = automatisation.summary;
-
   const legal = await checkLegal({
     dom,
     baseUrl: page.url,
@@ -224,6 +221,69 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   });
   findings.push(...sitemap.findings);
   summary.sitemap = sitemap.summary;
+
+  // -------------------------------------------------------- pages secondaires
+  const choisies = config.pages > 0
+    ? choisirPages({
+        dom,
+        baseUrl: page.url,
+        sitemapUrls: sitemap.adresses,
+        max: config.pages,
+      })
+    : [];
+
+  const detections = [
+    await detecterCapacites({ dom, html, baseUrl: page.url, stack: stack.summary }),
+  ];
+  const findingsSecondaires = [];
+  const pagesVisitees = [];
+
+  for (const cible of choisies) {
+    const chargee = await chargerPage(cible.url, { scheduler, httpOptions });
+    if (!chargee.ok) {
+      pagesVisitees.push({ ...cible, ok: false, erreur: chargee.erreur ?? chargee.statut });
+
+      // Une page du menu qui ne repond pas est un lien mort sous les yeux de
+      // tous les visiteurs. L'information est deja payee, on la remonte.
+      if (chargee.statut >= 400) {
+        findings.push({
+          id: 'page-liee-introuvable',
+          source: 'html',
+          evidence: {
+            page: cible.libelle,
+            adresse: new URL(cible.url).pathname,
+            statut: chargee.statut,
+          },
+        });
+      }
+      continue;
+    }
+
+    pagesVisitees.push({ ...cible, ok: true, statut: chargee.statut });
+    findingsSecondaires.push(...auditerPage({ dom: chargee.dom, page: cible }));
+    detections.push(
+      await detecterCapacites({
+        dom: chargee.dom,
+        html: chargee.html,
+        baseUrl: chargee.url,
+        stack: stack.summary,
+      })
+    );
+  }
+
+  summary.pages = {
+    accueil: page.url,
+    secondaires: pagesVisitees,
+    examinees: 1 + pagesVisitees.filter((p) => p.ok).length,
+  };
+
+  findings.push(...regrouperParPage(findingsAccueil, findingsSecondaires));
+
+  // La conclusion sur l'automatisation attend d'avoir vu toutes les pages :
+  // un artisan met souvent son formulaire de devis sur sa page contact.
+  const automatisation = await conclureAutomation({ detections, target });
+  findings.push(...automatisation.findings);
+  summary.automatisation = automatisation.summary;
 
   return {
     target,

@@ -40,6 +40,12 @@ export const DEFAULTS = {
   ignoreRobots: false,
   userAgent: DEFAULT_USER_AGENT,
   crux: false,
+  /**
+   * Pages secondaires auditees en plus de l'accueil. Chacune coute une requete
+   * et un delai de politesse : quatre suffisent a couvrir contact, prestations,
+   * tarifs et presentation, qui sont les pages ou se decide un achat.
+   */
+  pages: 4,
   /** Point-virgule par defaut : Excel en locale francaise n'accepte que lui. */
   csvDelimiter: ';',
 };
@@ -88,6 +94,7 @@ export function buildConfig(raw = {}) {
     crux: Boolean(raw.crux),
     cruxKey: raw.cruxKey || process.env.CRUX_API_KEY || null,
     csvDelimiter: raw.csvDelimiter || DEFAULTS.csvDelimiter,
+    pages: toInt(raw.pages, DEFAULTS.pages, { min: 0, max: 12 }),
   };
 }
 

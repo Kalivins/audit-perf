@@ -82,6 +82,7 @@ export const RULES = {
   'mentions-legales-cassees': { tier: B, poids: 80, effort: FAIBLE, theme: 'conformite' },
   'confidentialite-cassee': { tier: B, poids: 78, effort: FAIBLE, theme: 'conformite' },
   'ressources-non-securisees': { tier: B, poids: 76, effort: MOYEN, theme: 'conformite' },
+  'page-liee-introuvable': { tier: B, poids: 79, effort: FAIBLE, theme: 'contenu' },
   'https-non-force': { tier: B, poids: 74, effort: FAIBLE, theme: 'conformite' },
   'viewport-mal-configure': { tier: B, poids: 72, effort: FAIBLE, theme: 'conformite' },
   'zoom-bloque': { tier: B, poids: 70, effort: FAIBLE, theme: 'conformite' },
