@@ -29,7 +29,10 @@ export async function runReport(options = {}) {
 
   const written = await writeOutputs(records, config, store);
 
+  log.ok(`Sommaire               ${c.bold(written.index)}`);
   log.ok(`Rapports clients       ${c.bold(written.dossier)} (${written.rapports} fichiers)`);
   log.ok(`Liste de prospection   ${c.bold(written.csv.file)} (${written.csv.lignes} lignes)`);
+  log.blank();
+  log.info(c.grey('  "audit serve" pour les consulter dans un navigateur.'));
   log.blank();
 }

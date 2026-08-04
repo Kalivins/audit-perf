@@ -66,10 +66,17 @@ d'heures de mesures.
 ### Les autres commandes
 
 ```bash
+node bin/audit.js serve               # consulte les rapports dans un navigateur
 node bin/audit.js list                # réaffiche la synthèse depuis le cache
 node bin/audit.js report              # régénère rapports et CSV sans rescanner
 node bin/audit.js --help
 ```
+
+`serve` ouvre `http://127.0.0.1:4173/` sur un sommaire qui liste tous les sites
+triés, avec la phrase d'accroche de chacun, et un lien vers son rapport. Le
+serveur n'écoute que sur cette machine : les rapports contiennent des données
+d'entreprises réelles et ne doivent pas se retrouver exposés sur le réseau
+local par inadvertance.
 
 `report` est utile dès que vous retouchez une formulation : les fichiers sont
 refaits en une seconde, et les sites audités ne sont pas sollicités à nouveau.
@@ -173,10 +180,14 @@ vieilli.
 
 ```
 out/
+├── index.html            le sommaire, point d'entrée pour parcourir le lot
 ├── brut/                 un JSON complet par site, réutilisable
 ├── rapports/             un HTML autonome par site, à envoyer au client
 └── prospection.csv       la liste de démarchage, triée
 ```
+
+`index.html` est un document interne : il porte le score de prospection, qui
+n'apparaît dans aucun rapport client.
 
 Les rapports HTML n'ont **aucune dépendance externe** : ni police, ni script,
 ni image distante. Ils s'ouvrent hors ligne, s'impriment proprement en PDF et

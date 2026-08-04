@@ -133,14 +133,28 @@ export async function detectStack({ html, headers = {} }) {
       php: php?.version ?? null,
       cdn: byCategory('CDN').map((t) => t.nom),
       tout: all,
-      resume: summarize({
-        socle: cms ?? byCategory('Framework')[0] ?? null,
-        ecommerce: byCategory('E-commerce'),
-        builders: byCategory('Constructeur de pages'),
-        serveur,
-      }),
+      resume: resumeStack(all),
     },
   };
+}
+
+/**
+ * Recalcule le resume a partir de la liste des technologies deja detectees.
+ *
+ * Expose parce que ce libelle est un texte, pas une mesure : il doit pouvoir
+ * etre reconstruit a la generation des rapports, comme le reste de la prose,
+ * sans refaire tourner la detection ni solliciter le site.
+ */
+export function resumeStack(tout = []) {
+  const byCategory = (categorie) => tout.filter((t) => t.categorie === categorie);
+  const cms = byCategory('CMS')[0] ?? byCategory('Constructeur de site')[0] ?? null;
+
+  return summarize({
+    socle: cms ?? byCategory('Framework')[0] ?? null,
+    ecommerce: byCategory('E-commerce'),
+    builders: byCategory('Constructeur de pages'),
+    serveur: byCategory('Serveur')[0] ?? null,
+  });
 }
 
 function nameWithVersion(tech) {
@@ -157,6 +171,7 @@ function summarize({ socle, ecommerce, builders, serveur }) {
   if (socle) parts.push(nameWithVersion(socle));
   if (ecommerce.length) parts.push(ecommerce[0].nom);
   if (builders.length) parts.push(builders[0].nom);
-  const head = parts.join(' + ') || 'non identifie';
+  // Ce libelle atteint le rapport client, via la ligne Technique detectee.
+  const head = parts.join(' + ') || 'non identifiée';
   return serveur ? `${head} (${serveur.nom})` : head;
 }

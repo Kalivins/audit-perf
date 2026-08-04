@@ -97,7 +97,7 @@ export function hook({ consolidated, lh }) {
   const premier = consolidated?.findings?.[0];
   if (premier?.tier === TIERS.BLOQUANT) return premier.texte.titre;
   if (Number.isFinite(lh?.metrics?.lcp) && lh.metrics.lcp > 2500) {
-    return `Page affichee en ${(lh.metrics.lcp / 1000).toFixed(1).replace('.', ',')} s sur mobile`;
+    return `Page affichée en ${(lh.metrics.lcp / 1000).toFixed(1).replace('.', ',')} s sur mobile`;
   }
   return premier?.texte?.titre ?? null;
 }

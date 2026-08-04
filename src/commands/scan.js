@@ -104,7 +104,10 @@ export async function runScan(file, options = {}) {
   const written = await writeOutputs(records, config, store);
 
   log.ok(`Resultats bruts        ${c.bold(store.dirs.raw)}`);
+  log.ok(`Sommaire               ${c.bold(written.index)}`);
   log.ok(`Rapports clients       ${c.bold(written.dossier)} (${written.rapports} fichiers)`);
   log.ok(`Liste de prospection   ${c.bold(written.csv.file)} (${written.csv.lignes} lignes)`);
+  log.blank();
+  log.info(c.grey('  "audit serve" pour les consulter dans un navigateur.'));
   log.blank();
 }

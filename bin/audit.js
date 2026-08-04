@@ -82,6 +82,16 @@ program
   });
 
 program
+  .command('serve')
+  .description('ouvre les rapports dans un navigateur, via un serveur local')
+  .option('-o, --out <dossier>', 'dossier de sortie a servir', './out')
+  .option('-p, --port <n>', 'port d\'ecoute', '4173')
+  .action(async (opts) => {
+    const { runServe } = await import('../src/commands/serve.js');
+    await runServe(opts);
+  });
+
+program
   .command('list')
   .description('reaffiche la synthese depuis le cache, sans rien solliciter')
   .option('-o, --out <dossier>', 'dossier de sortie', './out')

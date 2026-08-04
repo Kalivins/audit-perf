@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "audit-perf",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["bin/audit.js", "serve", "--out", "out", "--port", "4173"],
+      "port": 4173
+    }
+  ]
+}
