@@ -168,6 +168,14 @@
     "correction": "Utiliser de vrais liens avec une adresse, plutôt que des éléments rendus cliquables par du code."
   },
 
+  "liens-morts": {
+    "titre": "Certains liens de votre site ne mènent nulle part",
+    "constat": "{nombre} lien(s) cassé(s) sur {verifies} vérifiés : {exemples}.",
+    "cout": "Un visiteur qui clique tombe sur une page d'erreur et repart avec l'impression d'un site laissé à l'abandon. C'est le genre de détail qui fait douter de la même façon qu'une vitrine mal éclairée. Les moteurs de recherche y voient aussi un signe de site mal entretenu.",
+    "correction": "Corriger ou retirer ces liens. S'ils pointaient vers des pages supprimées, mettre en place une redirection vers la page qui les remplace.",
+    "reserve": "Vérification portant sur un échantillon des liens de votre page d'accueil, pas sur la totalité du site."
+  },
+
   "erreurs-javascript": {
     "titre": "Votre site produit des erreurs",
     "constat": "Des erreurs sont signalées dans la console du navigateur.",

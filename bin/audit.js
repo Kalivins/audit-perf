@@ -59,6 +59,11 @@ program
     'pages secondaires auditees en plus de l\'accueil (0 pour l\'accueil seul)',
     '4'
   )
+  .option(
+    '--liens <n>',
+    'liens internes sondes par site, 0 pour ne pas les verifier. Coupe en mode rapide',
+    '10'
+  )
   .option('--limit <n>', 'ne traiter que les n premieres cibles')
   .option('--max-age <jours>', 'reanalyser au dela de cet age')
   .option('-f, --force', 'ignorer le cache et tout reanalyser')

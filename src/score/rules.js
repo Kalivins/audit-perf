@@ -76,7 +76,20 @@ export const RULES = {
   // et c'est aussi l'accroche la plus forte pour ouvrir une conversation.
   'php-obsolete': { tier: B, poids: 92, effort: MOYEN, theme: 'conformite' },
   'confidentialite-absente': { tier: B, poids: 90, effort: FAIBLE, theme: 'conformite' },
+  // Le releve dans un navigateur constate ce que l'analyse du HTML ne fait que
+  // soupconner. Quand il aboutit, il remplace l'indice : garder les deux
+  // reviendrait a compter deux fois le meme manquement.
+  'cookies-traceurs-avant-consentement': {
+    tier: B, poids: 89, effort: MOYEN, theme: 'conformite',
+    remplace: 'traceurs-sans-consentement',
+  },
   'traceurs-sans-consentement': { tier: B, poids: 88, effort: MOYEN, theme: 'conformite' },
+  // Mesure d'audience potentiellement exemptee : un point a verifier, pas un
+  // manquement etabli. Il quitte donc le palier bloquant.
+  'cookies-mesure-audience-a-verifier': {
+    tier: A, poids: 79, effort: FAIBLE, theme: 'conformite',
+    remplace: 'traceurs-sans-consentement',
+  },
   'viewport-absent': { tier: B, poids: 86, effort: FAIBLE, theme: 'conformite' },
   'code-http-anormal': { tier: B, poids: 82, effort: MOYEN, theme: 'contenu' },
   'mentions-legales-cassees': { tier: B, poids: 80, effort: FAIBLE, theme: 'conformite' },
@@ -131,6 +144,7 @@ export const RULES = {
   'boutons-sans-intitule': { tier: A, poids: 62, effort: FAIBLE, theme: 'contenu' },
   'images-sans-dimensions': { tier: A, poids: 60, effort: FAIBLE, theme: 'performance' },
   'entetes-securite-absents': { tier: A, poids: 58, effort: FAIBLE, theme: 'conformite' },
+  'liens-morts': { tier: A, poids: 66, effort: FAIBLE, theme: 'contenu' },
   'erreurs-javascript': { tier: A, poids: 56, effort: MOYEN, theme: 'contenu' },
   'titre-trop-long': { tier: A, poids: 50, effort: FAIBLE, theme: 'contenu' },
   'description-trop-longue': { tier: A, poids: 48, effort: FAIBLE, theme: 'contenu' },

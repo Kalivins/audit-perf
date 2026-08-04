@@ -48,6 +48,21 @@
     "correction": "Rétablir la page ou corriger l'adresse du lien."
   },
 
+  "cookies-traceurs-avant-consentement": {
+    "titre": "Vos traceurs se déposent avant tout accord",
+    "constat": "{nombre} cookies de suivi déposés sans la moindre interaction : {exemples}. Services concernés : {services}.",
+    "cout": "Nous avons ouvert votre site avec un navigateur neuf, sans cliquer sur quoi que ce soit, et ces cookies se sont installés immédiatement. La loi impose de recueillir l'accord du visiteur avant, et de lui permettre de refuser aussi facilement que d'accepter. Ce n'est pas une supposition ici, c'est un relevé : une plainte suffit à déclencher un contrôle, et la CNIL traite ces dossiers en procédure simplifiée pour les petites structures, avec des amendes pouvant atteindre 20 000 euros.",
+    "correction": "Installer un dispositif de consentement qui bloque réellement le dépôt tant que le visiteur n'a pas accepté. Beaucoup de bandeaux se contentent d'un affichage pendant que les traceurs continuent de se poser : c'est ce cas précis que la CNIL sanctionne."
+  },
+
+  "cookies-mesure-audience-a-verifier": {
+    "titre": "Votre mesure d'audience dépose des cookies, à vérifier",
+    "constat": "{nombre} cookies déposés sans interaction : {exemples}. Service : {services}.",
+    "cout": "Cet outil de mesure peut être dispensé de recueillir le consentement, à condition d'être configuré selon les critères de la CNIL : usage strictement statistique, pas de recoupement avec d'autres traitements, durée de conservation limitée, et données non transmises à des tiers. S'il l'est, tout va bien. S'il ne l'est pas, vous êtes dans la même situation qu'un site sans bandeau du tout. Nous ne pouvons pas trancher depuis l'extérieur.",
+    "correction": "Vérifier auprès de la personne qui a installé l'outil que la configuration exemptée est bien active. Dans le cas contraire, soumettre la mesure au consentement.",
+    "reserve": "Constat prudent : nous relevons le dépôt du cookie, pas la configuration de l'outil qui le pose."
+  },
+
   "traceurs-sans-consentement": {
     "titre": "Vous déposez des traceurs sans demander l'accord",
     "constat": "Traceurs détectés : {traceurs}. Aucun dispositif de recueil du consentement n'a été repéré sur la page.",

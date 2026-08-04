@@ -46,6 +46,12 @@ export const DEFAULTS = {
    * tarifs et presentation, qui sont les pages ou se decide un achat.
    */
   pages: 4,
+  /**
+   * Liens internes sondes par site. Chacun coute une requete et son delai de
+   * politesse : la verification est donc bornee, et coupee en mode rapide ou
+   * un balayage de prospection n'en a pas l'usage.
+   */
+  liens: 10,
   /** Point-virgule par defaut : Excel en locale francaise n'accepte que lui. */
   csvDelimiter: ';',
 };
@@ -95,6 +101,7 @@ export function buildConfig(raw = {}) {
     cruxKey: raw.cruxKey || process.env.CRUX_API_KEY || null,
     csvDelimiter: raw.csvDelimiter || DEFAULTS.csvDelimiter,
     pages: toInt(raw.pages, DEFAULTS.pages, { min: 0, max: 12 }),
+    liens: raw.quick ? 0 : toInt(raw.liens, DEFAULTS.liens, { min: 0, max: 40 }),
   };
 }
 

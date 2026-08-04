@@ -121,12 +121,13 @@ function buildContext(finding, metrics) {
  * @param {object|null} params.lh lecture Lighthouse retenue (mobile de preference)
  * @returns {Promise<{findings: array, top: array, parPalier: object, inconnus: string[]}>}
  */
-export async function consolidate({ quick, lh = null }) {
+export async function consolidate({ quick, lh = null, extra = [] }) {
   const metrics = lh?.metrics ?? null;
 
   const raw = [
     ...(quick?.findings ?? []).map((f) => ({ source: 'html', ...f })),
     ...(lh?.findings ?? []),
+    ...extra,
     ...metricFindings(metrics),
   ];
 
@@ -216,6 +217,14 @@ async function assembleFindings(raw, metrics) {
       ],
     });
   }
+
+  // Un constat etabli par observation en remplace un etabli par indice.
+  const remplaces = new Set(
+    findings.map((f) => RULES[f.id]?.remplace).filter(Boolean)
+  );
+  const retenus = findings.filter((f) => !remplaces.has(f.id));
+  findings.length = 0;
+  findings.push(...retenus);
 
   findings.sort((a, b) => {
     const tierDiff = TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier);

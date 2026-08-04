@@ -108,7 +108,26 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
         .map((s) => lighthouse[s])
         .find((r) => r && !r.erreur) ?? null;
 
-    const consolidated = await consolidate({ quick, lh: retenu });
+    // Releve des cookies : demande un navigateur, donc reserve au mode complet
+    // et soumis a la meme limite de concurrence que Lighthouse.
+    let cookies = null;
+    const findingsExternes = [];
+    if (!config.quick && MESURABLE.has(quick.status)) {
+      const { releverCookies, checkCookies } = await import('./cookies.js');
+      cookies = await lhLimit(() =>
+        scheduler.run(hostOf(target.url), () =>
+          releverCookies(quick.page?.url || target.url, { timeout: config.timeout })
+        )
+      );
+      findingsExternes.push(...checkCookies(cookies));
+      onEvent({ type: 'cookies', target, disponible: cookies.disponible });
+    }
+
+    const consolidated = await consolidate({
+      quick,
+      lh: retenu,
+      extra: findingsExternes,
+    });
     const gains = estimateGains({
       lh: retenu,
       findings: consolidated.findings,
@@ -126,6 +145,7 @@ export async function runBatch(targets, config, { store, onEvent = () => {} } = 
       },
       lighthouse,
       terrain,
+      cookies,
       profilRetenu: retenu?.strategy ?? null,
       consolidated,
       gains,

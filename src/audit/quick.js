@@ -20,6 +20,7 @@ import { detectStack } from './checks/stack.js';
 import { checkHeaders } from './checks/headers.js';
 import { checkStructuredData } from './checks/structured.js';
 import { checkSitemap } from './checks/sitemap.js';
+import { checkLiens } from './checks/liens.js';
 import { detecterCapacites, conclureAutomation } from './checks/automation.js';
 import { choisirPages } from './pages.js';
 import { chargerPage, auditerPage, regrouperParPage } from './page.js';
@@ -278,6 +279,19 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   };
 
   findings.push(...regrouperParPage(findingsAccueil, findingsSecondaires));
+
+  // Liens internes : on exclut ceux deja sollicites comme pages secondaires,
+  // inutile de payer deux fois la meme requete.
+  const liens = await checkLiens({
+    dom,
+    baseUrl: page.url,
+    max: config.liens,
+    deja: new Set(choisies.map((c) => c.url)),
+    scheduler,
+    httpOptions,
+  });
+  findings.push(...liens.findings);
+  summary.liens = liens.summary;
 
   // La conclusion sur l'automatisation attend d'avoir vu toutes les pages :
   // un artisan met souvent son formulaire de devis sur sa page contact.

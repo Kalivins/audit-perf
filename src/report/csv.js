@@ -32,7 +32,10 @@ const COLONNES = [
   'automatisation_en_place',
   'automatisation_manquante',
   'rang_secteur',
+  'pages_auditees',
   'pages_site',
+  'liens_morts',
+  'cookies_traceurs',
   'cert_jours_restants',
   'spf',
   'dmarc',
@@ -107,7 +110,12 @@ function ligne(record, index, reportPath) {
     rang_secteur: record.comparaison
       ? `${record.comparaison.rang}/${record.comparaison.total}`
       : '',
+    pages_auditees: record.quick?.summary?.pages?.examinees ?? '',
     pages_site: record.quick?.summary?.sitemap?.pages ?? '',
+    liens_morts: record.quick?.summary?.liens?.morts?.length ?? '',
+    cookies_traceurs: record.cookies?.disponible
+      ? record.cookies.traceurs.length
+      : '',
     cert_jours_restants: record.quick?.summary?.certificat?.jours_restants ?? '',
     spf: dns ? (dns.spf ? 'oui' : 'NON') : '',
     dmarc: dns ? (dns.dmarc ? (dns.politique_dmarc ?? 'oui') : 'NON') : '',

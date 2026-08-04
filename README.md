@@ -98,8 +98,14 @@ refaits en une seconde, et les sites audités ne sont pas sollicités à nouveau
 
 ## Ce que l'outil vérifie
 
-77 constats répartis en quatre paliers : bloquant, coûteux, à corriger, et
+80 constats répartis en quatre paliers : bloquant, coûteux, à corriger, et
 opportunité.
+
+**Périmètre** : la page d'accueil plus quatre pages secondaires choisies dans
+le menu du site (`--pages`). Lighthouse ne tourne que sur l'accueil, une mesure
+de performance coûtant une trentaine de secondes. Les défauts de contenu, eux,
+sont relevés sur toutes les pages examinées et regroupés en un seul constat
+listant les pages concernées.
 
 **Performance** : scores Lighthouse (performance, accessibilité, bonnes
 pratiques, référencement) en mobile et en bureau, LCP, CLS, TBT, TTFB, poids
@@ -114,6 +120,19 @@ PHP encore supportée.
 TLS, version du protocole, en-têtes de sécurité, et surtout SPF et DMARC.
 Sans DMARC, n'importe qui peut envoyer un courrier en se faisant passer pour
 l'entreprise, à ses clients comme à ses fournisseurs.
+
+**Cookies réellement déposés** : un navigateur neuf ouvre la page, ne clique
+sur rien, et l'outil relève ce qui s'est écrit dans son pot à cookies. Le
+constat passe de l'indice à la preuve, en nommant les cookies et leurs
+services. C'est décisif : un site du lot affiche un bandeau de consentement et
+dépose quand même Google Analytics et Google Ads avant tout clic, ce que
+l'analyse du HTML seul ne pouvait pas voir. Nécessite Chrome, donc absent du
+mode rapide.
+
+**Liens morts** : sondage borné des liens internes de la page d'accueil
+(`--liens`, 10 par défaut, coupé en mode rapide). Vérifier deux cents liens
+sur trois cents sites reviendrait à marteler des serveurs mutualisés pendant
+des heures pour un gain marginal.
 
 **Référencement local** : données structurées LocalBusiness, adresse,
 téléphone et horaires déclarés, plan de site et taille réelle du site.
