@@ -97,6 +97,8 @@ export const RULES = {
 
   // -------------------------------------------------------------- a corriger
   'titre-absent': { tier: A, poids: 90, effort: FAIBLE, theme: 'contenu' },
+  'donnees-structurees-absentes': { tier: A, poids: 87, effort: MOYEN, theme: 'contenu' },
+  'fiche-locale-absente': { tier: A, poids: 86, effort: MOYEN, theme: 'contenu' },
   'dmarc-absent': { tier: A, poids: 84, effort: FAIBLE, theme: 'conformite' },
   'spf-absent': { tier: A, poids: 82, effort: FAIBLE, theme: 'conformite' },
   'dmarc-sans-protection': { tier: A, poids: 81, effort: FAIBLE, theme: 'conformite' },
@@ -104,6 +106,8 @@ export const RULES = {
   'images-sans-description': { tier: A, poids: 76, effort: MOYEN, theme: 'contenu' },
   'contraste-insuffisant': { tier: A, poids: 74, effort: MOYEN, theme: 'contenu' },
   'titre-h1-absent': { tier: A, poids: 70, effort: FAIBLE, theme: 'contenu' },
+  'coordonnees-non-declarees': { tier: A, poids: 72, effort: FAIBLE, theme: 'contenu' },
+  'horaires-non-declares': { tier: A, poids: 71, effort: FAIBLE, theme: 'contenu' },
   'champs-sans-etiquette': { tier: A, poids: 68, effort: MOYEN, theme: 'contenu' },
   'liens-sans-intitule': { tier: A, poids: 64, effort: FAIBLE, theme: 'contenu' },
   'boutons-sans-intitule': { tier: A, poids: 62, effort: FAIBLE, theme: 'contenu' },
@@ -117,6 +121,7 @@ export const RULES = {
   'description-trop-courte': { tier: A, poids: 42, effort: FAIBLE, theme: 'contenu' },
   'titres-h1-multiples': { tier: A, poids: 40, effort: FAIBLE, theme: 'contenu' },
   'liens-non-suivables': { tier: A, poids: 38, effort: MOYEN, theme: 'contenu' },
+  'sitemap-absent': { tier: A, poids: 34, effort: FAIBLE, theme: 'contenu' },
   'partage-social-non-configure': { tier: A, poids: 30, effort: FAIBLE, theme: 'contenu' },
   'technologies-depreciees': { tier: A, poids: 28, effort: MOYEN, theme: 'contenu' },
   'version-serveur-exposee': { tier: A, poids: 22, effort: FAIBLE, theme: 'conformite' },

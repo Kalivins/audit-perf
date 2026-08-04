@@ -18,6 +18,8 @@ import { checkImages } from './checks/images.js';
 import { checkFonts } from './checks/fonts.js';
 import { detectStack } from './checks/stack.js';
 import { checkHeaders } from './checks/headers.js';
+import { checkStructuredData } from './checks/structured.js';
+import { checkSitemap } from './checks/sitemap.js';
 import { inspectCertificate, checkCertificate } from '../net/tls.js';
 import { inspectDns, checkDns } from '../net/dns.js';
 
@@ -190,6 +192,10 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   summary.certificat = certificat;
   summary.dns = dnsInfo;
 
+  const structurees = checkStructuredData({ dom, html });
+  findings.push(...structurees.findings);
+  summary.donnees_structurees = structurees.summary;
+
   const legal = await checkLegal({
     dom,
     baseUrl: page.url,
@@ -198,6 +204,15 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   });
   findings.push(...legal.findings);
   summary.legal = legal.summary;
+
+  const sitemap = await checkSitemap({
+    baseUrl: page.url,
+    declares: await robots.sitemaps(page.url),
+    scheduler,
+    httpOptions,
+  });
+  findings.push(...sitemap.findings);
+  summary.sitemap = sitemap.summary;
 
   return {
     target,

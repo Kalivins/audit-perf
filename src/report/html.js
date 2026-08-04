@@ -276,6 +276,46 @@ function methode(record, gains) {
 }
 
 /**
+ * Position dans le metier, calculee sur les seuls sites du lot.
+ *
+ * La reserve est ecrite noir sur blanc : laisser croire a un classement
+ * sectoriel complet serait un mensonge par omission, et le client le
+ * decouvrirait tot ou tard.
+ */
+function comparaisonConfreres(record) {
+  const c = record.comparaison;
+  if (!c) return '';
+
+  const position =
+    c.rang === 1
+      ? 'la plus rapide du groupe'
+      : c.rang === c.total
+        ? 'la plus lente du groupe'
+        : `en ${c.rang}<sup>e</sup> position sur ${c.total}`;
+
+  const ecart = c.lcp - c.mediane;
+  const versusMediane =
+    Math.abs(ecart) < 300
+      ? 'Vous êtes dans la moyenne du groupe.'
+      : ecart > 0
+        ? `Votre page met ${escapeHtml(seconds(ecart))} de plus que la médiane du groupe.`
+        : `Votre page met ${escapeHtml(seconds(-ecart))} de moins que la médiane du groupe.`;
+
+  return `<p>Nous avons mesuré <strong>${c.total} entreprises</strong> du même métier
+  (${escapeHtml(c.libelle.toLowerCase())}) dans le secteur de Besançon. Sur le temps
+  d'affichage mobile, votre page est ${position}.</p>
+  <ul class="gain-liste">
+    <li><span>Votre page</span><span class="valeur">${escapeHtml(seconds(c.lcp))}</span></li>
+    <li><span>Médiane du groupe</span><span class="valeur">${escapeHtml(seconds(c.mediane))}</span></li>
+    <li><span>La plus rapide du groupe</span><span class="valeur">${escapeHtml(seconds(c.meilleur))}</span></li>
+  </ul>
+  <p>${versusMediane}</p>
+  <div class="reserve">Cette comparaison porte sur les entreprises que nous avons
+  mesurées, et non sur l'ensemble du secteur. Elle donne un ordre de grandeur
+  de ce que font vos confrères, pas un classement officiel.</div>`;
+}
+
+/**
  * Donnees de terrain. Affichees uniquement quand CrUX a effectivement repondu,
  * ce qui est rare sur une TPE locale. C'est la seule source d'un INP reel : le
  * reste du rapport s'appuie sur une approximation de laboratoire, et le dire
@@ -354,6 +394,7 @@ export function buildReport(record, options = {}) {
     jauges(lh),
     section('Les cinq points les plus coûteux', top.map((f, i) => probleme(f, i + 1)).join('\n')),
     section('Ce que vous pouvez gagner', estimationGains(record.gains)),
+    section('Face à vos confrères', comparaisonConfreres(record)),
     section('Mesures relevées sur vos visiteurs réels', donneesTerrain(record)),
     section('Téléphone et ordinateur', comparatif(record)),
     section('Le reste des points relevés', autresProblemes(reste)),

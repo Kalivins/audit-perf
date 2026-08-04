@@ -21,6 +21,41 @@
     "correction": "Corriger la configuration du serveur pour qu'une page valide renvoie un code de succès."
   },
 
+  "donnees-structurees-absentes": {
+    "titre": "Google ne sait pas que vous êtes un commerce local",
+    "constat": "Aucune donnée structurée sur la page d'accueil.",
+    "cout": "Il existe un bloc invisible, lu uniquement par les moteurs de recherche, qui déclare votre nom, votre adresse, vos horaires et votre téléphone. C'est lui qui permet à Google d'afficher votre fiche dans l'encart local, avec la carte et le bouton d'appel. Sans ce bloc, Google doit deviner à partir du texte de votre page, et se trompe souvent. Pour un commerce de quartier, cet encart est fréquemment la première source de visites.",
+    "correction": "Ajouter un bloc de données structurées de type LocalBusiness déclarant raison sociale, adresse, téléphone, horaires et zone desservie. La plupart des CMS le font avec une extension."
+  },
+
+  "fiche-locale-absente": {
+    "titre": "Votre établissement n'est pas déclaré comme tel",
+    "constat": "Données structurées présentes ({types}) mais aucune fiche d'établissement.",
+    "cout": "Votre site déclare bien quelque chose aux moteurs de recherche, mais pas qu'il s'agit d'un commerce ayant une adresse, des horaires et un téléphone. Vous passez donc à côté de l'affichage enrichi dans les résultats locaux, là où se décide la visite d'un client qui cherche à proximité.",
+    "correction": "Compléter les données structurées avec un bloc LocalBusiness correspondant à votre activité."
+  },
+
+  "coordonnees-non-declarees": {
+    "titre": "Vos coordonnées ne sont pas exploitables automatiquement",
+    "constat": "Il manque à votre fiche : {manques}.",
+    "cout": "Votre adresse et votre téléphone sont sans doute écrits quelque part sur la page, mais pas sous une forme qu'une machine sait lire. Résultat : pas de bouton d'appel direct sur mobile, pas d'itinéraire proposé automatiquement, et une fiche incomplète dans les résultats de recherche.",
+    "correction": "Renseigner l'adresse postale complète et le téléphone dans les données structurées."
+  },
+
+  "horaires-non-declares": {
+    "titre": "Vos horaires ne sont pas déclarés à Google",
+    "constat": "La fiche d'établissement ne comporte pas d'horaires d'ouverture.",
+    "cout": "C'est l'information la plus recherchée par quelqu'un qui vous cherche depuis son téléphone. Sans horaires déclarés, Google ne peut pas afficher « ouvert » ou « ferme à 19 h », et le client va vérifier chez un concurrent qui, lui, l'affiche.",
+    "correction": "Déclarer les horaires d'ouverture dans les données structurées, en pensant aux fermetures exceptionnelles."
+  },
+
+  "sitemap-absent": {
+    "titre": "Aucun plan de site",
+    "constat": "Ni /sitemap.xml ni déclaration dans le robots.txt.",
+    "cout": "Le plan de site est la liste que vous fournissez aux moteurs de recherche pour qu'ils sachent quelles pages existent. Sans lui, ils explorent au hasard des liens, et les pages mal reliées au reste du site peuvent rester ignorées longtemps.",
+    "correction": "Générer un plan de site, automatique dans la plupart des CMS, et le déclarer dans le robots.txt."
+  },
+
   "titre-absent": {
     "titre": "Votre page n'a pas de titre",
     "constat": "Aucune balise de titre exploitable.",

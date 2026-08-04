@@ -16,6 +16,7 @@ import { buildIndex } from './index.js';
 import { STATUS_LABELS } from '../audit/quick.js';
 import { reconsolidate } from '../score/findings.js';
 import { resumeStack } from '../audit/checks/stack.js';
+import { classerParSecteur } from '../score/comparaison.js';
 import { estimateGains } from '../score/gains.js';
 import { prospectScore, hook } from '../score/prospect.js';
 
@@ -56,12 +57,19 @@ async function rafraichir(record) {
 
 export async function writeOutputs(records, config, store) {
   const reports = new Map();
-  const frais = [];
 
-  for (const record of records) {
-    const actualise = await rafraichir(record);
-    frais.push(actualise);
+  // Deux passes : le classement entre confreres a besoin de tout le lot avant
+  // qu'un seul rapport puisse etre ecrit.
+  const rafraichis = [];
+  for (const record of records) rafraichis.push(await rafraichir(record));
+  const classement = classerParSecteur(rafraichis);
 
+  const frais = rafraichis.map((record) => ({
+    ...record,
+    comparaison: classement.get(record.target.id) ?? null,
+  }));
+
+  for (const actualise of frais) {
     const fichier = path.join(store.dirs.reports, `${actualise.target.slug}.html`);
     const html = buildReport(actualise, {
       statusLabel: STATUS_LABELS[actualise.status] ?? actualise.status,

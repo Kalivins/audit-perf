@@ -68,6 +68,17 @@ export function createRobotsCache({
   }
 
   return {
+    /** Sitemaps declares par le site lui-meme, s'il en annonce. */
+    async sitemaps(url) {
+      if (ignore) return [];
+      try {
+        const { robots } = await load(new URL(url).origin);
+        return robots?.getSitemaps?.() ?? [];
+      } catch {
+        return [];
+      }
+    },
+
     /**
      * @returns {Promise<{status: string, allowed: boolean, crawlDelay: number|null, detail: string}>}
      */
