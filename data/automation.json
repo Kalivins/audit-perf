@@ -1,0 +1,75 @@
+{
+  "_lisez_moi": "Dispositifs d'automatisation reconnus, et ce qu'on attend par secteur. Ajouter une plateforme: nom, capacite, indices (sous-chaines cherchees dans le HTML, insensibles a la casse). Ajouter un secteur: completer aussi src/score/secteurs.js.",
+
+  "_capacites_note": "Ces libelles sont affiches tels quels dans le rapport client, d'ou les accents.",
+
+  "capacites": {
+    "contact": "Formulaire de contact",
+    "devis": "Demande de devis en ligne",
+    "reservation": "Réservation en ligne",
+    "rdv": "Prise de rendez-vous en ligne",
+    "commande": "Commande ou click and collect",
+    "paiement": "Paiement en ligne",
+    "newsletter": "Inscription à une liste de diffusion",
+    "chat": "Messagerie instantanée",
+    "avis": "Avis clients affichés"
+  },
+
+  "plateformes": [
+    { "nom": "TheFork", "capacite": "reservation", "indices": ["thefork.", "lafourchette."] },
+    { "nom": "Zenchef", "capacite": "reservation", "indices": ["zenchef."] },
+    { "nom": "Guestonline", "capacite": "reservation", "indices": ["guestonline."] },
+    { "nom": "OpenTable", "capacite": "reservation", "indices": ["opentable."] },
+    { "nom": "Resy", "capacite": "reservation", "indices": ["resy.com"] },
+    { "nom": "Overfull", "capacite": "reservation", "indices": ["overfull.fr"] },
+
+    { "nom": "Uber Eats", "capacite": "commande", "indices": ["ubereats.com"] },
+    { "nom": "Deliveroo", "capacite": "commande", "indices": ["deliveroo."] },
+    { "nom": "Just Eat", "capacite": "commande", "indices": ["just-eat."] },
+    { "nom": "Zelty", "capacite": "commande", "indices": ["zelty."] },
+    { "nom": "Sunday", "capacite": "commande", "indices": ["sundayapp."] },
+
+    { "nom": "Planity", "capacite": "rdv", "indices": ["planity."] },
+    { "nom": "Doctolib", "capacite": "rdv", "indices": ["doctolib."] },
+    { "nom": "Treatwell", "capacite": "rdv", "indices": ["treatwell."] },
+    { "nom": "Calendly", "capacite": "rdv", "indices": ["calendly.com"] },
+    { "nom": "SimplyBook", "capacite": "rdv", "indices": ["simplybook."] },
+    { "nom": "iDGARAGES", "capacite": "rdv", "indices": ["idgarages."] },
+    { "nom": "Vroomly", "capacite": "rdv", "indices": ["vroomly."] },
+
+    { "nom": "Stripe", "capacite": "paiement", "indices": ["js.stripe.com", "checkout.stripe.com"] },
+    { "nom": "PayPal", "capacite": "paiement", "indices": ["paypalobjects.com", "paypal.com/sdk"] },
+    { "nom": "SumUp", "capacite": "paiement", "indices": ["sumup."] },
+    { "nom": "Alma", "capacite": "paiement", "indices": ["alma.eu", "getalma."] },
+    { "nom": "Klarna", "capacite": "paiement", "indices": ["klarna."] },
+
+    { "nom": "Crisp", "capacite": "chat", "indices": ["crisp.chat"] },
+    { "nom": "Tawk.to", "capacite": "chat", "indices": ["tawk.to"] },
+    { "nom": "Intercom", "capacite": "chat", "indices": ["widget.intercom.io", "intercomcdn"] },
+    { "nom": "Smartsupp", "capacite": "chat", "indices": ["smartsupp."] },
+    { "nom": "Zendesk Chat", "capacite": "chat", "indices": ["zdassets.com", "zopim"] },
+    { "nom": "Messenger", "capacite": "chat", "indices": ["facebook.com/plugins/customerchat", "fb-customerchat"] },
+
+    { "nom": "Mailchimp", "capacite": "newsletter", "indices": ["list-manage.com", "mailchimp."] },
+    { "nom": "Brevo", "capacite": "newsletter", "indices": ["sendinblue.", "brevo."] },
+    { "nom": "Mailjet", "capacite": "newsletter", "indices": ["mailjet."] },
+    { "nom": "Sarbacane", "capacite": "newsletter", "indices": ["sarbacane."] },
+
+    { "nom": "Trustpilot", "capacite": "avis", "indices": ["trustpilot."] },
+    { "nom": "Avis Verifies", "capacite": "avis", "indices": ["avis-verifies.", "netreviews."] },
+    { "nom": "Guest Suite", "capacite": "avis", "indices": ["guest-suite."] },
+    { "nom": "Google Avis", "capacite": "avis", "indices": ["elfsight.com/google-reviews", "reviews-widget"] }
+  ],
+
+  "attendus": {
+    "restauration": ["contact", "reservation", "commande"],
+    "alimentaire": ["contact", "commande"],
+    "batiment": ["contact", "devis"],
+    "automobile": ["contact", "rdv", "devis"],
+    "beaute": ["contact", "rdv"],
+    "sante": ["contact", "rdv"],
+    "commerce": ["contact", "commande"],
+    "services": ["contact", "rdv", "devis"],
+    "autre": ["contact"]
+  }
+}

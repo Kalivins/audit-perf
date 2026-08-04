@@ -9,7 +9,7 @@
 
 import { readFile } from 'node:fs/promises';
 
-const THEMES = ['conformite', 'performance', 'contenu'];
+const THEMES = ['conformite', 'performance', 'contenu', 'automatisation'];
 
 let cache = null;
 

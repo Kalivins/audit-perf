@@ -20,6 +20,7 @@ import { detectStack } from './checks/stack.js';
 import { checkHeaders } from './checks/headers.js';
 import { checkStructuredData } from './checks/structured.js';
 import { checkSitemap } from './checks/sitemap.js';
+import { checkAutomation } from './checks/automation.js';
 import { inspectCertificate, checkCertificate } from '../net/tls.js';
 import { inspectDns, checkDns } from '../net/dns.js';
 
@@ -195,6 +196,16 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   const structurees = checkStructuredData({ dom, html });
   findings.push(...structurees.findings);
   summary.donnees_structurees = structurees.summary;
+
+  const automatisation = await checkAutomation({
+    dom,
+    html,
+    target,
+    baseUrl: page.url,
+    stack: stack.summary,
+  });
+  findings.push(...automatisation.findings);
+  summary.automatisation = automatisation.summary;
 
   const legal = await checkLegal({
     dom,

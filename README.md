@@ -98,6 +98,9 @@ refaits en une seconde, et les sites audités ne sont pas sollicités à nouveau
 
 ## Ce que l'outil vérifie
 
+77 constats répartis en quatre paliers : bloquant, coûteux, à corriger, et
+opportunité.
+
 **Performance** : scores Lighthouse (performance, accessibilité, bonnes
 pratiques, référencement) en mobile et en bureau, LCP, CLS, TBT, TTFB, poids
 total et nombre de requêtes.
@@ -107,6 +110,28 @@ total et nombre de requêtes.
 déposés sans dispositif de consentement, HTTPS présent et imposé, version de
 PHP encore supportée.
 
+**Sécurité et infrastructure** : date d'expiration et validité du certificat
+TLS, version du protocole, en-têtes de sécurité, et surtout SPF et DMARC.
+Sans DMARC, n'importe qui peut envoyer un courrier en se faisant passer pour
+l'entreprise, à ses clients comme à ses fournisseurs.
+
+**Référencement local** : données structurées LocalBusiness, adresse,
+téléphone et horaires déclarés, plan de site et taille réelle du site.
+Pour un commerce de quartier, l'encart local de Google est souvent la
+première source de visites.
+
+**Automatisation** : ce que le site sait faire et surtout ce qu'il ne sait pas
+faire, comparé aux usages du métier. Réservation, prise de rendez-vous,
+commande, demande de devis, formulaire de contact, liste de diffusion, avec
+reconnaissance des plateformes courantes. L'outil repère aussi les intitulés
+trompeurs, ces boutons « Réserver une table » qui renvoient vers un formulaire
+de contact : le gérant croit avoir automatisé et répond encore à la main.
+
+**Comparaison entre confrères** : rang de l'entreprise sur le temps
+d'affichage, parmi les sites du même métier présents dans le lot. À partir de
+trois entreprises, et le rapport précise que la comparaison ne porte pas sur
+le secteur entier.
+
 **Mobile et accessibilité** : balise viewport, blocage du zoom, contraste,
 descriptions d'images, étiquettes de formulaire.
 
@@ -114,8 +139,21 @@ descriptions d'images, étiquettes de formulaire.
 et surtout l'indexation bloquée, ce réglage de mise au point resté actif
 après une refonte qui rend un site entier invisible sur Google.
 
-**Technique** : détection de 36 CMS, constructeurs de site, frameworks et
+**Technique** : détection de 37 CMS, constructeurs de site, frameworks et
 serveurs, extensible via `data/fingerprints.json`.
+
+Les opportunités d'automatisation sont tenues à l'écart des défauts. Ne pas
+prendre ses réservations en ligne n'est pas une faute, c'est un choix qui a un
+coût : le rapport les présente dans leur propre section, comme des
+propositions.
+
+### Étendre les secteurs
+
+Les attentes d'automatisation dépendent du métier. Pour en ajouter un :
+compléter `data/automation.json` (plateformes et capacités attendues) et
+`src/score/secteurs.js` (mots-clés de reconnaissance). Les quatre secteurs
+livrés sont la restauration, le commerce alimentaire, l'artisanat du bâtiment
+et l'automobile, plus la beauté, la santé, le commerce et les services.
 
 ## Deux principes de conception
 

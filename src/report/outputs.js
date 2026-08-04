@@ -16,27 +16,51 @@ import { buildIndex } from './index.js';
 import { STATUS_LABELS } from '../audit/quick.js';
 import { reconsolidate } from '../score/findings.js';
 import { resumeStack } from '../audit/checks/stack.js';
+import { libellerCapacites } from '../audit/checks/automation.js';
 import { classerParSecteur } from '../score/comparaison.js';
 import { estimateGains } from '../score/gains.js';
 import { prospectScore, hook } from '../score/prospect.js';
+
+/**
+ * Reconstruit les libelles derives du resume de la phase 1.
+ *
+ * Le resume technique et les intitules de dispositifs sont des textes, pas des
+ * mesures : ils atteignent le rapport client et doivent pouvoir etre corriges
+ * sans relancer une seule mesure. Toujours par copie, jamais en place :
+ * l'enregistrement d'origine reste ce qui a ete mesure.
+ */
+async function rafraichirLibelles(quick) {
+  if (!quick?.summary) return quick;
+
+  const summary = { ...quick.summary };
+
+  if (summary.stack?.tout) {
+    summary.stack = { ...summary.stack, resume: resumeStack(summary.stack.tout) };
+  }
+
+  const auto = summary.automatisation;
+  if (auto) {
+    summary.automatisation = {
+      ...auto,
+      en_place: await libellerCapacites(auto.capacites ?? []),
+      manquants_libelles: await libellerCapacites(auto.manquants ?? []),
+      trompeurs: await Promise.all(
+        (auto.trompeurs ?? []).map(async (t) => ({
+          ...t,
+          libelle: (await libellerCapacites([t.capacite]))[0],
+        }))
+      ),
+    };
+  }
+
+  return { ...quick, summary };
+}
 
 /** Reconstruit tout ce qui depend du code et des textes, pas des mesures. */
 async function rafraichir(record) {
   if (!record.consolidated?.findings?.length) return record;
 
-  // Le resume technique est un libelle, pas une mesure : on le reconstruit
-  // depuis la liste des technologies detectees.
-  const stock = record.quick?.summary?.stack;
-  const quick = stock?.tout
-    ? {
-        ...record.quick,
-        summary: {
-          ...record.quick.summary,
-          stack: { ...stock, resume: resumeStack(stock.tout) },
-        },
-      }
-    : record.quick;
-
+  const quick = await rafraichirLibelles(record.quick);
   const lh = record.lighthouse?.[record.profilRetenu] ?? null;
   const consolidated = await reconsolidate(record);
   const gains = estimateGains({

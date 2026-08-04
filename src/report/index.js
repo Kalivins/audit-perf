@@ -64,8 +64,8 @@ function ligne(record, index, chemin) {
       <td class="nombre">${index + 1}</td>
       <td>${nom}<span class="secteur">${escapeHtml(record.target.sector ?? '')}</span></td>
       <td class="nombre">-</td><td class="nombre">-</td><td class="nombre">-</td>
-      <td class="nombre">-</td><td class="nombre">-</td>
-      <td>${escapeHtml(statut)}</td>
+      <td class="nombre">-</td><td class="nombre">-</td><td class="nombre">-</td>
+      <td>-</td><td>${escapeHtml(statut)}</td>
     </tr>`;
   }
 
@@ -79,7 +79,11 @@ function ligne(record, index, chemin) {
     <td class="nombre">${escapeHtml(lh?.metrics?.lcp ? seconds(lh.metrics.lcp) : '-')}</td>
     <td class="nombre">${escapeHtml(lh?.resources?.poids_total ? bytes(lh.resources.poids_total) : '-')}</td>
     <td class="nombre">${bloquants > 0 ? `<strong style="color:var(--rouge)">${bloquants}</strong>` : '0'}</td>
-    <td>${escapeHtml(truncate(record.quick?.summary?.stack?.resume ?? '-', 26))}</td>
+    <td class="nombre">${record.consolidated?.opportunites?.length ?? 0}</td>
+    <td>${escapeHtml(
+      (record.quick?.summary?.automatisation?.manquants_libelles ?? []).join(', ') || '-'
+    )}</td>
+    <td>${escapeHtml(truncate(record.quick?.summary?.stack?.resume ?? '-', 22))}</td>
   </tr>`;
 }
 
@@ -119,7 +123,8 @@ export function buildIndex(records, reports = new Map()) {
 <table class="sommaire">
   <thead><tr>
     <th>#</th><th>Entreprise</th><th>Besoin</th><th>Perf</th>
-    <th>LCP</th><th>Poids</th><th>Bloq.</th><th>Technique</th>
+    <th>LCP</th><th>Poids</th><th>Bloq.</th><th>Opp.</th>
+    <th>À automatiser</th><th>Technique</th>
   </tr></thead>
   <tbody>${lignes}</tbody>
 </table>
@@ -131,6 +136,10 @@ export function buildIndex(records, reports = new Map()) {
   Ce score n'apparaît dans aucun rapport client.</p>
   <p><strong>LCP</strong> : délai d'affichage du principal élément sur mobile.
   Seuil correct de 2,5 s publié par Google.</p>
+  <p><strong>Opp.</strong> : opportunités d'automatisation, c'est à dire ce que le
+  métier fait couramment en ligne et que ce site ne fait pas. Ce ne sont pas des
+  défauts : elles sont présentées à part dans le rapport client, comme des
+  propositions et non comme des reproches.</p>
   <p>Cliquer sur un nom ouvre le rapport destiné à cette entreprise.</p>
 </div>`;
 

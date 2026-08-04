@@ -18,6 +18,13 @@ export const TIERS = {
   COUTEUX: 'couteux',
   /** Contenu, referencement, accessibilite. Reel mais non urgent. */
   CORRIGER: 'corriger',
+  /**
+   * Ce que le site pourrait faire et ne fait pas. Ce ne sont pas des defauts :
+   * les melanger aux problemes ferait passer une absence de reservation en
+   * ligne pour une faute, alors que c'est une proposition commerciale. Palier
+   * separe, jamais present parmi les points les plus couteux.
+   */
+  OPPORTUNITE: 'opportunite',
 };
 
 /** Libelles affiches au client : accentues, contrairement au reste du code. */
@@ -25,10 +32,19 @@ export const TIER_LABELS = {
   [TIERS.BLOQUANT]: 'Bloquant',
   [TIERS.COUTEUX]: 'Coûteux',
   [TIERS.CORRIGER]: 'À corriger',
+  [TIERS.OPPORTUNITE]: 'Opportunité',
 };
 
 /** Ordre d'affichage des paliers. */
-export const TIER_ORDER = [TIERS.BLOQUANT, TIERS.COUTEUX, TIERS.CORRIGER];
+export const TIER_ORDER = [
+  TIERS.BLOQUANT,
+  TIERS.COUTEUX,
+  TIERS.CORRIGER,
+  TIERS.OPPORTUNITE,
+];
+
+/** Paliers qui decrivent un defaut, par opposition a une opportunite. */
+export const TIERS_DEFAUTS = [TIERS.BLOQUANT, TIERS.COUTEUX, TIERS.CORRIGER];
 
 export const EFFORTS = {
   FAIBLE: 'faible',
@@ -39,6 +55,7 @@ export const EFFORTS = {
 const B = TIERS.BLOQUANT;
 const C = TIERS.COUTEUX;
 const A = TIERS.CORRIGER;
+const O = TIERS.OPPORTUNITE;
 const { FAIBLE, MOYEN, ELEVE } = EFFORTS;
 
 /**
@@ -125,6 +142,14 @@ export const RULES = {
   'partage-social-non-configure': { tier: A, poids: 30, effort: FAIBLE, theme: 'contenu' },
   'technologies-depreciees': { tier: A, poids: 28, effort: MOYEN, theme: 'contenu' },
   'version-serveur-exposee': { tier: A, poids: 22, effort: FAIBLE, theme: 'conformite' },
+
+  // ------------------------------------------------------------ opportunites
+  'reservation-en-ligne-absente': { tier: O, poids: 90, effort: MOYEN, theme: 'automatisation' },
+  'prise-de-rdv-absente': { tier: O, poids: 88, effort: MOYEN, theme: 'automatisation' },
+  'commande-en-ligne-absente': { tier: O, poids: 85, effort: ELEVE, theme: 'automatisation' },
+  'demande-de-devis-absente': { tier: O, poids: 80, effort: FAIBLE, theme: 'automatisation' },
+  'contact-sans-formulaire': { tier: O, poids: 75, effort: FAIBLE, theme: 'automatisation' },
+  'newsletter-absente': { tier: O, poids: 40, effort: FAIBLE, theme: 'automatisation' },
 };
 
 export const EFFORT_LABELS = {

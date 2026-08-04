@@ -28,6 +28,15 @@ const COLONNES = [
   'bloquants',
   'couteux',
   'a_corriger',
+  'opportunites',
+  'automatisation_en_place',
+  'automatisation_manquante',
+  'rang_secteur',
+  'pages_site',
+  'cert_jours_restants',
+  'spf',
+  'dmarc',
+  'fiche_locale',
   'perf_mobile',
   'perf_bureau',
   'accessibilite',
@@ -71,6 +80,9 @@ function ligne(record, index, reportPath) {
   const legal = record.quick?.summary?.legal ?? {};
   const stack = record.quick?.summary?.stack ?? {};
   const traceurs = record.quick?.summary?.traceurs ?? {};
+  const auto = record.quick?.summary?.automatisation ?? null;
+  const dns = record.quick?.summary?.dns?.disponible ? record.quick.summary.dns : null;
+  const structurees = record.quick?.summary?.donnees_structurees ?? null;
   const top = record.consolidated?.top ?? [];
 
   return {
@@ -89,6 +101,17 @@ function ligne(record, index, reportPath) {
     bloquants: palier[TIERS.BLOQUANT] ?? 0,
     couteux: palier[TIERS.COUTEUX] ?? 0,
     a_corriger: palier[TIERS.CORRIGER] ?? 0,
+    opportunites: record.consolidated?.opportunites?.length ?? 0,
+    automatisation_en_place: (auto?.en_place ?? []).join(' | '),
+    automatisation_manquante: (auto?.manquants ?? []).join(' | '),
+    rang_secteur: record.comparaison
+      ? `${record.comparaison.rang}/${record.comparaison.total}`
+      : '',
+    pages_site: record.quick?.summary?.sitemap?.pages ?? '',
+    cert_jours_restants: record.quick?.summary?.certificat?.jours_restants ?? '',
+    spf: dns ? (dns.spf ? 'oui' : 'NON') : '',
+    dmarc: dns ? (dns.dmarc ? (dns.politique_dmarc ?? 'oui') : 'NON') : '',
+    fiche_locale: structurees ? (structurees.fiche_locale ? 'oui' : 'NON') : '',
     perf_mobile: toScore(lh?.scores?.performance) ?? '',
     perf_bureau: toScore(bureau?.scores?.performance) ?? '',
     accessibilite: toScore(lh?.scores?.accessibilite) ?? '',

@@ -276,6 +276,67 @@ function methode(record, gains) {
 }
 
 /**
+ * Ce que le site sait deja faire, et ce qu'il pourrait faire.
+ *
+ * Presente a part des problemes, et formule comme une proposition et non
+ * comme un reproche : ne pas prendre ses reservations en ligne n'est pas une
+ * faute, c'est un choix qui a un cout.
+ */
+function automatisation(record) {
+  const auto = record.quick?.summary?.automatisation;
+  const opportunites = record.consolidated?.opportunites ?? [];
+  if (!auto && !opportunites.length) return '';
+
+  const enPlace = auto?.en_place ?? [];
+  const outils = auto?.outils ?? [];
+
+  const dejaLa = enPlace.length
+    ? `<p><strong>Ce que votre site sait déjà faire :</strong>
+       ${escapeHtml(enPlace.join(', '))}${
+         outils.length
+           ? ` (via ${escapeHtml([...new Set(outils.map((o) => o.nom))].join(', '))})`
+           : ''
+       }.</p>`
+    : `<p>Nous n'avons repéré aucun dispositif automatisé sur votre page d'accueil.
+       Tout ce qui vous arrive passe donc par le téléphone ou le déplacement.</p>`;
+
+  // Le cas le plus parlant : un bouton qui promet, une destination qui ne
+  // tient pas. Le gerant est persuade d'avoir mis en place le dispositif.
+  const trompeurs = (auto?.trompeurs ?? [])
+    .map(
+      (t) => `<div class="reserve">Votre page comporte un bouton
+      « ${escapeHtml(t.intitule)} », mais il renvoie vers une page ordinaire de
+      votre site, pas vers un outil de ${escapeHtml(t.libelle.toLowerCase())}.
+      Le visiteur qui clique croit réserver et se retrouve devant un formulaire
+      auquel vous devrez répondre à la main.</div>`
+    )
+    .join('\n');
+
+  const propositions = opportunites
+    .map(
+      (f) => `<article class="probleme">
+  <div class="tete">
+    <h3>${escapeHtml(f.texte.titre)}</h3>
+    ${etiquette(`mise en place ${f.effortLabel}`, 'corriger')}
+  </div>
+  ${f.texte.constat ? `<div class="bloc constat">${para(f.texte.constat)}</div>` : ''}
+  <div class="bloc cout"><div class="intitule">Ce que cela vous coûte aujourd'hui</div>
+    ${para(f.texte.cout)}</div>
+  <div class="bloc"><div class="intitule">Ce que nous proposons</div>
+    ${para(f.texte.correction)}</div>
+</article>`
+    )
+    .join('\n');
+
+  if (!propositions) {
+    return `${dejaLa}${trompeurs}<p>Sur les usages courants de votre métier, votre
+    site est déjà bien équipé.</p>`;
+  }
+
+  return `${dejaLa}\n${trompeurs}\n${propositions}`;
+}
+
+/**
  * Position dans le metier, calculee sur les seuls sites du lot.
  *
  * La reserve est ecrite noir sur blanc : laisser croire a un classement
@@ -386,7 +447,9 @@ export function buildReport(record, options = {}) {
 
   const lh = record.lighthouse?.[record.profilRetenu] ?? null;
   const top = record.consolidated?.top ?? [];
-  const reste = (record.consolidated?.findings ?? []).slice(top.length);
+  // Le reste ne porte que sur les defauts : les opportunites ont leur section.
+  const defauts = record.consolidated?.defauts ?? record.consolidated?.findings ?? [];
+  const reste = defauts.slice(top.length);
 
   const corps = [
     entete(record),
@@ -394,6 +457,7 @@ export function buildReport(record, options = {}) {
     jauges(lh),
     section('Les cinq points les plus coûteux', top.map((f, i) => probleme(f, i + 1)).join('\n')),
     section('Ce que vous pouvez gagner', estimationGains(record.gains)),
+    section('Ce que vous pourriez automatiser', automatisation(record)),
     section('Face à vos confrères', comparaisonConfreres(record)),
     section('Mesures relevées sur vos visiteurs réels', donneesTerrain(record)),
     section('Téléphone et ordinateur', comparatif(record)),

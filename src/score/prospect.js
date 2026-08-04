@@ -72,7 +72,11 @@ export function prospectScore({ lh = null, consolidated = null }) {
       detail.accessibilite = POIDS.accessibilite * (1 - scores.accessibilite);
     }
   } else {
-    const autres = findings.filter((f) => f.tier !== TIERS.BLOQUANT).length;
+    // Les opportunites sont comptees a part : elles mesurent un potentiel
+    // commercial, pas l'etat du site.
+    const autres = findings.filter(
+      (f) => f.tier !== TIERS.BLOQUANT && f.tier !== TIERS.OPPORTUNITE
+    ).length;
     detail.autres = POIDS_AUTRES_PARTIEL * Math.min(1, autres / AUTRES_SATURATION);
   }
 

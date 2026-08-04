@@ -1,0 +1,43 @@
+{
+  "reservation-en-ligne-absente": {
+    "titre": "Vos réservations passent toutes par le téléphone",
+    "constat": "Aucun dispositif de réservation en ligne détecté sur le site.",
+    "cout": "Chaque table se négocie au téléphone, souvent pendant le coup de feu, et un appel manqué est une table vide. Les demandes qui arrivent le soir ou le lundi de fermeture ne sont jamais rappelées. Un client qui hésite entre deux adresses réserve chez celui où il peut le faire en trois clics, à minuit, sans parler à personne.",
+    "correction": "Mettre en place un module de réservation relié à votre plan de salle, avec confirmation automatique et rappel la veille. Les solutions courantes se branchent sur le site existant sans le refaire."
+  },
+
+  "prise-de-rdv-absente": {
+    "titre": "Vos rendez-vous se prennent uniquement par téléphone",
+    "constat": "Aucun outil de prise de rendez-vous en ligne détecté.",
+    "cout": "Chaque rendez-vous vous coûte un appel, une interruption, et parfois plusieurs allers-retours pour trouver un créneau. Les demandes qui arrivent hors de vos horaires sont perdues, alors que c'est justement le moment où vos clients ont le temps de s'en occuper. Un agenda en ligne travaille pendant que vous êtes sous un évier ou sous un capot.",
+    "correction": "Installer un agenda en ligne exposant vos créneaux réels, avec confirmation et rappel automatiques pour limiter les rendez-vous non honorés."
+  },
+
+  "commande-en-ligne-absente": {
+    "titre": "Vos clients ne peuvent pas commander depuis votre site",
+    "constat": "Ni commande en ligne, ni retrait sur place détectés.",
+    "cout": "Un client qui veut réserver son pain, sa commande du midi ou un produit particulier doit appeler ou se déplacer sans savoir si vous l'avez. Le retrait sur place est souvent le premier pas rentable : il ne demande aucune livraison, il lisse vos pics d'affluence, et il vous fait connaître à l'avance ce que vous devez préparer.",
+    "correction": "Commencer par le retrait sur place sur une sélection réduite de produits, avec paiement à l'enlèvement. La livraison est une deuxième étape, plus lourde, à décider séparément."
+  },
+
+  "demande-de-devis-absente": {
+    "titre": "Aucun moyen de vous demander un devis en ligne",
+    "constat": "Aucun formulaire de devis détecté sur le site.",
+    "cout": "Un particulier qui cherche un artisan un dimanche soir ne vous appellera pas. S'il ne peut décrire son besoin nulle part, il passe au suivant sur la liste. Un formulaire qui collecte le type de travaux, l'adresse, quelques photos et une disponibilité vous fait aussi gagner le premier échange téléphonique, celui qui ne sert qu'à comprendre la demande.",
+    "correction": "Ajouter un formulaire de demande de devis avec les questions que vous posez déjà au téléphone, et la possibilité de joindre des photos."
+  },
+
+  "contact-sans-formulaire": {
+    "titre": "Vous joindre demande un effort",
+    "constat": "Aucun formulaire de contact détecté sur la page d'accueil.",
+    "cout": "Un visiteur doit relever votre numéro, changer d'application, et vous appeler pendant vos heures de travail. Chaque étape en fait renoncer une partie. Un simple formulaire capte les demandes du soir et du week-end, celles qui ne vous parviennent aujourd'hui jamais.",
+    "correction": "Ajouter un formulaire court, trois ou quatre champs au maximum, avec une réponse automatique confirmant la bonne réception."
+  },
+
+  "newsletter-absente": {
+    "titre": "Vous ne gardez aucun contact avec vos visiteurs",
+    "constat": "Aucune inscription à une liste de diffusion détectée.",
+    "cout": "La quasi-totalité des visiteurs d'un site ne reviennent jamais et ne laissent aucune trace. Une adresse collectée, c'est la possibilité d'annoncer une fermeture, une nouveauté ou une offre à des gens qui vous connaissent déjà. C'est le seul canal que vous possédez vraiment, contrairement aux réseaux sociaux dont vous ne maîtrisez ni la portée ni les règles.",
+    "correction": "Ajouter un champ d'inscription assorti d'une raison concrète de s'inscrire, et respecter le consentement ainsi que le désabonnement en un clic."
+  }
+}

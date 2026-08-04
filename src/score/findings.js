@@ -8,7 +8,7 @@
  */
 
 import { CWV_THRESHOLDS } from '../config.js';
-import { RULES, TIER_ORDER, TIERS, EFFORT_LABELS } from './rules.js';
+import { RULES, TIER_ORDER, TIERS, TIERS_DEFAUTS, EFFORT_LABELS } from './rules.js';
 import { loadCopy, render } from './copy.js';
 import { ms, seconds, bytes, decimal, integer } from '../util/format.js';
 
@@ -228,9 +228,17 @@ async function assembleFindings(raw, metrics) {
     parPalier[tier] = findings.filter((f) => f.tier === tier).length;
   }
 
+  // Les opportunites sont tenues a l'ecart des problemes : une absence de
+  // reservation en ligne n'est pas une faute, et la presenter parmi les points
+  // les plus couteux dirait au client qu'il a mal fait quelque chose.
+  const defauts = findings.filter((f) => TIERS_DEFAUTS.includes(f.tier));
+  const opportunites = findings.filter((f) => f.tier === TIERS.OPPORTUNITE);
+
   return {
     findings,
-    top: findings.slice(0, 5),
+    defauts,
+    opportunites,
+    top: defauts.slice(0, 5),
     parPalier,
     inconnus: [...new Set(inconnus)],
     bloquants: parPalier[TIERS.BLOQUANT] ?? 0,
