@@ -32,12 +32,5 @@
     "constat": "Aucun formulaire de contact détecté sur la page d'accueil.",
     "cout": "Un visiteur doit relever votre numéro, changer d'application, et vous appeler pendant vos heures de travail. Chaque étape en fait renoncer une partie. Un simple formulaire capte les demandes du soir et du week-end, celles qui ne vous parviennent aujourd'hui jamais.",
     "correction": "Ajouter un formulaire court, trois ou quatre champs au maximum, avec une réponse automatique confirmant la bonne réception."
-  },
-
-  "newsletter-absente": {
-    "titre": "Vous ne gardez aucun contact avec vos visiteurs",
-    "constat": "Aucune inscription à une liste de diffusion détectée.",
-    "cout": "La quasi-totalité des visiteurs d'un site ne reviennent jamais et ne laissent aucune trace. Une adresse collectée, c'est la possibilité d'annoncer une fermeture, une nouveauté ou une offre à des gens qui vous connaissent déjà. C'est le seul canal que vous possédez vraiment, contrairement aux réseaux sociaux dont vous ne maîtrisez ni la portée ni les règles.",
-    "correction": "Ajouter un champ d'inscription assorti d'une raison concrète de s'inscrire, et respecter le consentement ainsi que le désabonnement en un clic."
   }
 }

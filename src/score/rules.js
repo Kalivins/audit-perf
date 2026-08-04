@@ -164,7 +164,6 @@ export const RULES = {
   'commande-en-ligne-absente': { tier: O, poids: 85, effort: ELEVE, theme: 'automatisation' },
   'demande-de-devis-absente': { tier: O, poids: 80, effort: FAIBLE, theme: 'automatisation' },
   'contact-sans-formulaire': { tier: O, poids: 75, effort: FAIBLE, theme: 'automatisation' },
-  'newsletter-absente': { tier: O, poids: 40, effort: FAIBLE, theme: 'automatisation' },
 };
 
 export const EFFORT_LABELS = {

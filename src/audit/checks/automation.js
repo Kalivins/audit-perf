@@ -232,9 +232,11 @@ export async function conclureAutomation({ detections = [], target }) {
       evidence: { secteur },
     }));
 
-  if (!enPlace.has('newsletter')) {
-    findings.push({ id: 'newsletter-absente', source: 'html', evidence: {} });
-  }
+  // L'absence de liste de diffusion n'emet plus de constat : elle se verifiait
+  // sur la totalite des sites mesures, et un signal qui ne distingue jamais
+  // personne n'aide ni a trier ni a conseiller. La detection reste, elle sert
+  // a ne pas confondre une inscription a une lettre avec un vrai formulaire de
+  // contact, et a crediter les sites qui en ont une.
 
   return {
     findings,
