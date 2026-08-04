@@ -77,6 +77,69 @@
     "correction": "Retirer user-scalable=no et maximum-scale de la balise viewport."
   },
 
+  "certificat-expire": {
+    "titre": "Votre certificat de sécurité a expiré",
+    "constat": "Le certificat était valide jusqu'au {expire_le}.",
+    "cout": "Chaque visiteur voit maintenant un écran rouge d'avertissement à la place de votre site, avec un bouton pour rebrousser chemin. La quasi-totalité s'arrête là. Votre site est en ligne mais il est devenu inaccessible en pratique, et personne ne vous préviendra.",
+    "correction": "Renouveler le certificat auprès de votre hébergeur, et activer le renouvellement automatique pour que la situation ne se reproduise pas."
+  },
+
+  "certificat-expire-bientot": {
+    "titre": "Votre certificat de sécurité expire très bientôt",
+    "constat": "Certificat délivré par {emetteur}, valide jusqu'au {expire_le}, soit {jours} jours après cette analyse.",
+    "cout": "Passé cette date, les navigateurs afficheront un écran rouge d'avertissement à la place de votre site et vos visiteurs ne pourront plus y accéder normalement. C'est une panne dont on connaît le jour à l'avance, et qui reste pourtant l'une des plus fréquentes, parce que personne ne surveille cette date.",
+    "correction": "Vérifier que le renouvellement automatique est actif chez votre hébergeur. S'il ne l'est pas, l'activer maintenant plutôt que de noter la date dans un agenda."
+  },
+
+  "certificat-invalide": {
+    "titre": "Votre certificat de sécurité n'est pas reconnu",
+    "constat": "Motif signalé par le navigateur : {motif}. Émetteur : {emetteur}.",
+    "cout": "Les navigateurs refusent ce certificat et affichent un avertissement de sécurité avant votre page. L'effet est le même que si vous n'aviez aucune protection, avec en plus un message alarmant qui laisse penser que votre site est compromis.",
+    "correction": "Faire réinstaller un certificat valide, en veillant à ce que la chaîne de certification complète soit servie et que le nom de domaine corresponde exactement."
+  },
+
+  "tls-obsolete": {
+    "titre": "Votre site utilise une version de chiffrement abandonnée",
+    "constat": "Le serveur négocie en {protocole}, protocole retiré des navigateurs.",
+    "cout": "Ce niveau de chiffrement n'est plus considéré comme sûr et les navigateurs récents commencent à le refuser purement et simplement. Les visiteurs concernés ne voient plus votre site du tout, sans qu'aucun message ne vous parvienne.",
+    "correction": "Demander à votre hébergeur d'activer TLS 1.2 et 1.3 et de désactiver les versions antérieures."
+  },
+
+  "dmarc-absent": {
+    "titre": "N'importe qui peut envoyer un mail en votre nom",
+    "constat": "Aucun enregistrement DMARC sur le domaine {domaine}.",
+    "cout": "Sans cette protection, un tiers peut envoyer un courrier qui affiche votre adresse comme expéditeur, à vos clients comme à vos fournisseurs. Une fausse facture avec un autre RIB envoyée depuis votre nom est une fraude courante, et c'est votre réputation qui encaisse. La protection consiste en une seule ligne à ajouter chez votre gestionnaire de nom de domaine.",
+    "correction": "Publier un enregistrement DMARC, d'abord en observation puis en rejet une fois vos envois légitimes identifiés. À faire avec celui qui gère votre messagerie."
+  },
+
+  "dmarc-sans-protection": {
+    "titre": "Votre protection anti-usurpation est en observation seulement",
+    "constat": "DMARC présent sur {domaine} avec une politique {politique}, qui ne bloque rien.",
+    "cout": "La configuration existe mais elle se contente de constater. Un courrier envoyé en se faisant passer pour vous arrive quand même chez le destinataire. C'est la première étape d'une mise en place, elle n'a probablement jamais été terminée.",
+    "correction": "Passer la politique en quarantaine puis en rejet, après avoir vérifié que vos envois légitimes ne sont pas affectés."
+  },
+
+  "spf-absent": {
+    "titre": "Vos serveurs d'envoi de courrier ne sont pas déclarés",
+    "constat": "Aucun enregistrement SPF sur le domaine {domaine}.",
+    "cout": "Rien n'indique aux messageries qui a le droit d'envoyer du courrier en votre nom. Conséquence dans les deux sens : les usurpations passent plus facilement, et vos propres mails, devis et confirmations, ont davantage de chances de tomber dans les indésirables de vos clients.",
+    "correction": "Publier un enregistrement SPF listant les serveurs autorisés à envoyer pour votre domaine."
+  },
+
+  "entetes-securite-absents": {
+    "titre": "Votre serveur n'envoie pas les protections de base",
+    "constat": "{nombre} en-têtes de sécurité absents : {manquants}.",
+    "cout": "Ce sont des instructions que votre serveur donne au navigateur pour protéger vos visiteurs, contre l'affichage de votre site dans le cadre d'un autre site par exemple, technique employée pour faire cliquer les gens à leur insu. Elles se règlent une fois dans la configuration du serveur et ne demandent aucune maintenance ensuite.",
+    "correction": "Ajouter ces en-têtes dans la configuration du serveur ou le fichier .htaccess."
+  },
+
+  "version-serveur-exposee": {
+    "titre": "Votre serveur annonce publiquement sa version",
+    "constat": "En-têtes concernés : {entetes}",
+    "cout": "Cette information ne sert à personne d'utile et indique à qui cherche une faille exactement laquelle essayer sur votre installation. La masquer ne protège de rien à elle seule, mais elle évite de figurer dans les recherches automatisées de serveurs vulnérables.",
+    "correction": "Masquer la version du serveur dans sa configuration."
+  },
+
   "php-obsolete": {
     "titre": "Votre serveur tourne sur une version obsolète",
     "constat": "Le serveur annonce PHP {version}, qui ne reçoit plus aucun correctif de sécurité.",

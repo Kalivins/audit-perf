@@ -47,8 +47,11 @@ const { FAIBLE, MOYEN, ELEVE } = EFFORTS;
  */
 export const RULES = {
   // ---------------------------------------------------------------- bloquant
+  'certificat-expire': { tier: B, poids: 100, effort: FAIBLE, theme: 'conformite' },
   'indexation-bloquee': { tier: B, poids: 100, effort: FAIBLE, theme: 'contenu' },
   'https-absent': { tier: B, poids: 98, effort: FAIBLE, theme: 'conformite' },
+  'certificat-invalide': { tier: B, poids: 97, effort: FAIBLE, theme: 'conformite' },
+  'certificat-expire-bientot': { tier: B, poids: 96, effort: FAIBLE, theme: 'conformite' },
   'mentions-legales-absentes': { tier: B, poids: 95, effort: FAIBLE, theme: 'conformite' },
   'page-sans-contenu-html': { tier: B, poids: 94, effort: ELEVE, theme: 'contenu' },
   // Une version de PHP sans correctif de securite passe devant les manquements
@@ -65,6 +68,7 @@ export const RULES = {
   'https-non-force': { tier: B, poids: 74, effort: FAIBLE, theme: 'conformite' },
   'viewport-mal-configure': { tier: B, poids: 72, effort: FAIBLE, theme: 'conformite' },
   'zoom-bloque': { tier: B, poids: 70, effort: FAIBLE, theme: 'conformite' },
+  'tls-obsolete': { tier: B, poids: 68, effort: MOYEN, theme: 'conformite' },
 
   // ---------------------------------------------------------------- couteux
   'lcp-trop-lent': { tier: C, poids: 100, effort: MOYEN, theme: 'performance' },
@@ -93,6 +97,9 @@ export const RULES = {
 
   // -------------------------------------------------------------- a corriger
   'titre-absent': { tier: A, poids: 90, effort: FAIBLE, theme: 'contenu' },
+  'dmarc-absent': { tier: A, poids: 84, effort: FAIBLE, theme: 'conformite' },
+  'spf-absent': { tier: A, poids: 82, effort: FAIBLE, theme: 'conformite' },
+  'dmarc-sans-protection': { tier: A, poids: 81, effort: FAIBLE, theme: 'conformite' },
   'description-absente': { tier: A, poids: 80, effort: FAIBLE, theme: 'contenu' },
   'images-sans-description': { tier: A, poids: 76, effort: MOYEN, theme: 'contenu' },
   'contraste-insuffisant': { tier: A, poids: 74, effort: MOYEN, theme: 'contenu' },
@@ -101,6 +108,7 @@ export const RULES = {
   'liens-sans-intitule': { tier: A, poids: 64, effort: FAIBLE, theme: 'contenu' },
   'boutons-sans-intitule': { tier: A, poids: 62, effort: FAIBLE, theme: 'contenu' },
   'images-sans-dimensions': { tier: A, poids: 60, effort: FAIBLE, theme: 'performance' },
+  'entetes-securite-absents': { tier: A, poids: 58, effort: FAIBLE, theme: 'conformite' },
   'erreurs-javascript': { tier: A, poids: 56, effort: MOYEN, theme: 'contenu' },
   'titre-trop-long': { tier: A, poids: 50, effort: FAIBLE, theme: 'contenu' },
   'description-trop-longue': { tier: A, poids: 48, effort: FAIBLE, theme: 'contenu' },
@@ -111,6 +119,7 @@ export const RULES = {
   'liens-non-suivables': { tier: A, poids: 38, effort: MOYEN, theme: 'contenu' },
   'partage-social-non-configure': { tier: A, poids: 30, effort: FAIBLE, theme: 'contenu' },
   'technologies-depreciees': { tier: A, poids: 28, effort: MOYEN, theme: 'contenu' },
+  'version-serveur-exposee': { tier: A, poids: 22, effort: FAIBLE, theme: 'conformite' },
 };
 
 export const EFFORT_LABELS = {

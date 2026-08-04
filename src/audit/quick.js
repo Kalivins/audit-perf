@@ -17,6 +17,9 @@ import { checkTracking } from './checks/tracking.js';
 import { checkImages } from './checks/images.js';
 import { checkFonts } from './checks/fonts.js';
 import { detectStack } from './checks/stack.js';
+import { checkHeaders } from './checks/headers.js';
+import { inspectCertificate, checkCertificate } from '../net/tls.js';
+import { inspectDns, checkDns } from '../net/dns.js';
 
 export const STATUS = {
   OK: 'ok',
@@ -163,6 +166,29 @@ export async function runQuickAudit(target, { scheduler, robots, config }) {
   const stack = await detectStack({ html, headers: page.headers });
   findings.push(...stack.findings);
   summary.stack = stack.summary;
+
+  const entetes = checkHeaders({
+    headers: page.headers,
+    httpsAvailable: page.httpsAvailable,
+  });
+  findings.push(...entetes.findings);
+  summary.entetes = entetes.summary;
+
+  // Certificat et DNS : deux sondes legeres, independantes du contenu, qui
+  // apportent des constats datables et verifiables par le client lui-meme.
+  const [certificat, dnsInfo] = await Promise.all([
+    page.httpsAvailable
+      ? scheduler.run(host, () =>
+          inspectCertificate(new URL(page.url).hostname, { timeout: config.timeout })
+        )
+      : Promise.resolve({ disponible: false, raison: 'site non servi en HTTPS' }),
+    inspectDns(new URL(page.url).hostname, { timeout: config.timeout }),
+  ]);
+
+  findings.push(...checkCertificate(certificat));
+  findings.push(...checkDns(dnsInfo));
+  summary.certificat = certificat;
+  summary.dns = dnsInfo;
 
   const legal = await checkLegal({
     dom,
