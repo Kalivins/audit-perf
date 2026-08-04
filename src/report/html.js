@@ -13,7 +13,8 @@
 
 import { page, jauge, etiquette, section, para, classeSeuil } from './template.js';
 import {
-  escapeHtml, seconds, ms, bytes, decimal, integer, score as toScore, frenchDate,
+  escapeHtml, seconds, ms, bytes, decimal, integer, duree,
+  score as toScore, frenchDate,
 } from '../util/format.js';
 import { TIERS, TIER_LABELS, TIER_ORDER } from '../score/rules.js';
 import { CWV_THRESHOLDS } from '../config.js';
@@ -171,7 +172,7 @@ function estimationGains(gains) {
     ]);
     items.push([
       'Attente en moins sur le réseau mobile',
-      `${gains.poids.secondes_4g_economisees.toFixed(1).replace('.', ',')} s`,
+      duree(gains.poids.secondes_4g_economisees),
     ]);
   }
   if (!items.length) return '';

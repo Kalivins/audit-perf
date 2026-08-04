@@ -28,6 +28,17 @@ export function bytes(value) {
   return `${(ko / 1024).toFixed(1).replace('.', ',')}${NBSP}Mo`;
 }
 
+/** Duree en secondes, basculant en minutes au dela de 60 s : 319,7 -> "5 min 20 s" */
+export function duree(secondes) {
+  if (!Number.isFinite(secondes)) return '-';
+  if (secondes < 60) return `${secondes.toFixed(1).replace('.', ',')}${NBSP}s`;
+  const minutes = Math.floor(secondes / 60);
+  const reste = Math.round(secondes % 60);
+  return reste
+    ? `${minutes}${NBSP}min${NBSP}${reste}${NBSP}s`
+    : `${minutes}${NBSP}min`;
+}
+
 /** 0.083 -> "0,083" (CLS, sans unite) */
 export function decimal(value, digits = 3) {
   if (value == null || !Number.isFinite(value)) return '-';
@@ -48,11 +59,17 @@ export function integer(value) {
     .replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
 }
 
-/** Tronque pour les colonnes de tableau. */
+/**
+ * Tronque pour les colonnes de tableau.
+ *
+ * Points de suspension en ASCII plutot que le caractere unique : la console
+ * Windows n'est pas en UTF-8 par defaut et affichait des caracteres parasites
+ * a la place. Le rapport HTML, lui, declare son encodage et n'a pas ce souci.
+ */
 export function truncate(text, max) {
   const s = String(text ?? '');
   if (s.length <= max) return s;
-  return s.slice(0, Math.max(0, max - 1)).trimEnd() + '…';
+  return s.slice(0, Math.max(0, max - 3)).trimEnd() + '...';
 }
 
 /**

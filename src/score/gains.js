@@ -48,6 +48,7 @@ const FAMILLES = {
     'images-format-ancien',
     'images-surdimensionnees',
     'images-non-compressees',
+    'images-sans-chargement-differe',
     'animations-lourdes',
   ],
   javascript: [
@@ -60,6 +61,34 @@ const FAMILLES = {
   transfert: ['compression-absente'],
 };
 
+/**
+ * Types de ressources concernes par chaque famille. Ils servent de plafond :
+ * une economie sur les images ne peut pas depasser ce que les images pesent
+ * reellement. Sans ce garde-fou, une famille mal renseignee suffit a produire
+ * un poids evitable superieur au poids de la page, ce qui s'est produit sur un
+ * site servant 60 Mo de photos non redimensionnees.
+ */
+const TYPES_PAR_FAMILLE = {
+  images: ['image', 'media'],
+  javascript: ['script'],
+  styles: ['stylesheet'],
+  transfert: ['script', 'stylesheet', 'document'],
+};
+
+function poidsDesTypes(parType, types) {
+  if (!parType) return Infinity;
+  let total = 0;
+  let connu = false;
+  for (const type of types) {
+    const octets = parType[type]?.octets;
+    if (Number.isFinite(octets)) {
+      total += octets;
+      connu = true;
+    }
+  }
+  return connu ? total : Infinity;
+}
+
 const FAMILLE_DE = new Map(
   Object.entries(FAMILLES).flatMap(([famille, ids]) => ids.map((id) => [id, famille]))
 );
@@ -69,7 +98,7 @@ const FAMILLE_DE = new Map(
  * Seules les economies chiffrees par Lighthouse comptent : un constat deduit
  * d'une metrique n'est pas une opportunite de reduction de poids.
  */
-function economieParFamille(findings) {
+function economieParFamille(findings, parType) {
   const parFamille = new Map();
 
   for (const finding of findings) {
@@ -80,6 +109,14 @@ function economieParFamille(findings) {
     const courant = parFamille.get(famille) ?? { octets: 0, retenu: null };
     if (finding.savingsBytes > courant.octets) {
       parFamille.set(famille, { octets: finding.savingsBytes, retenu: finding.id });
+    }
+  }
+
+  // Plafonnement par le poids reel des ressources concernees.
+  for (const [famille, valeur] of parFamille) {
+    const plafond = poidsDesTypes(parType, TYPES_PAR_FAMILLE[famille] ?? []);
+    if (valeur.octets > plafond) {
+      parFamille.set(famille, { ...valeur, octets: plafond, plafonne: true });
     }
   }
 
@@ -155,7 +192,7 @@ export function estimateGains({ lh, findings = [], target = {} }) {
   }
 
   // ------------------------------------------------------------------ poids
-  const parFamille = economieParFamille(findings);
+  const parFamille = economieParFamille(findings, resources?.par_type);
   const economieOctets = [...parFamille.values()].reduce((t, f) => t + f.octets, 0);
 
   // Les millisecondes se recouvrent d'une opportunite a l'autre, Lighthouse le
