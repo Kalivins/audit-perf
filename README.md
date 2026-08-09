@@ -17,7 +17,7 @@ phrase qui explique ce qu'il coûte. Les textes clients vivent dans
 ## Installation
 
 ```bash
-git clone https://github.com/kevillard/audit-perf.git
+git clone https://github.com/Kalivins/audit-perf.git
 cd audit-perf
 npm install
 ```
