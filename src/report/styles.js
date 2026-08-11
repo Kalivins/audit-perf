@@ -90,6 +90,17 @@ p { margin: 0 0 0.85rem; }
   margin: 1.5rem 0;
 }
 .jauge { text-align: center; min-width: 88px; flex: 1 1 88px; }
+
+/* La precision sur la note de referencement. Un filet a gauche plutot qu un
+   encadre : elle explique une jauge affichee juste au-dessus et doit se lire
+   dans la foulee, pas s isoler comme un avertissement. */
+.note-seo {
+  border-left: 3px solid var(--encre-douce);
+  padding: 0.25rem 0 0.25rem 1rem;
+  margin: 1.25rem 0;
+}
+.note-seo p { margin: 0 0 0.6rem; font-size: 0.95rem; }
+.note-seo p:last-child { margin-bottom: 0; }
 .jauge .nom {
   font-size: 0.75rem;
   color: var(--encre-douce);

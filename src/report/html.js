@@ -83,7 +83,37 @@ function jauges(lh) {
   return `<div class="jauges">${contenu}</div>
 <p style="color:var(--encre-douce);font-size:0.9rem">
 Notes établies par Lighthouse, l'outil de mesure publié par Google, sur le
-profil ${escapeHtml(profil)}.</p>`;
+profil ${escapeHtml(profil)}.</p>${malentenduSeo(lh)}`;
+}
+
+/**
+ * Le paragraphe qui empeche la conclusion la plus frequente, et la plus fausse.
+ *
+ * Devant une note de referencement a 100 posee a cote d'une performance a 40,
+ * un gerant conclut que le classement est acquis et que la vitesse peut
+ * attendre. Le mot « SEO » porte cette confusion : la categorie de Lighthouse
+ * est une liste de controle d'indexabilite, et Google la documente ainsi.
+ *
+ * Le paragraphe ne s'affiche que dans ce cas de figure. Sur un site dont les
+ * deux notes se tiennent, il n'expliquerait rien et diluerait le reste.
+ */
+function malentenduSeo(lh) {
+  const seo = toScore(lh?.scores?.seo);
+  const perf = toScore(lh?.scores?.performance);
+  if (!Number.isFinite(seo) || !Number.isFinite(perf)) return '';
+  if (seo < 90 || perf >= 70) return '';
+
+  return `
+<div class="note-seo">
+<p><strong>Une précision sur la note de référencement, qui prête à confusion.</strong>
+Elle mesure l'indexabilité et non le classement. Lighthouse y vérifie la
+présence d'un titre, d'une description et de balises lisibles par un moteur.
+Votre note de ${seo} signifie donc que rien n'empêche Google de lire ce site.</p>
+<p>Le classement dépend d'autres facteurs, et la vitesse d'affichage en fait
+partie depuis 2021. Son effet le plus mesurable se situe pourtant ailleurs :
+un visiteur qui referme la page avant qu'elle s'affiche n'apparaît dans aucune
+de ces quatre notes.</p>
+</div>`;
 }
 
 /** Comparatif mobile / bureau : l'ecart est souvent l'argument le plus net. */
