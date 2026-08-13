@@ -98,7 +98,7 @@ refaits en une seconde, et les sites audités ne sont pas sollicités à nouveau
 
 ## Ce que l'outil vérifie
 
-80 constats répartis en quatre paliers : bloquant, coûteux, à corriger, et
+81 constats répartis en quatre paliers : bloquant, coûteux, à corriger, et
 opportunité.
 
 **Périmètre** : la page d'accueil plus quatre pages secondaires choisies dans

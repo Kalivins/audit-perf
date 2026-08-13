@@ -147,6 +147,13 @@
     "correction": "Associer une étiquette à chaque champ."
   },
 
+  "cibles-tactiles-trop-petites": {
+    "titre": "Vos boutons sont trop petits pour un doigt",
+    "constat": "{elements} élément(s) sous la taille minimale, mesuré sur un écran de téléphone.",
+    "cout": "Un lien ou un bouton de moins de 24 pixels se rate au doigt, et la personne qui l'a raté appuie à côté, revient en arrière, recommence. Sur un menu ou un bouton d'appel, ce sont des visiteurs qui renoncent sans jamais vous le dire. Le critère 2.5.8 des règles d'accessibilité WCAG 2.2 fixe ce minimum à 24 pixels, et il s'applique depuis 2023.",
+    "correction": "Agrandir la zone cliquable sans forcément grossir le texte : une hauteur minimale sur le lien suffit, et la mise en page ne bouge pas."
+  },
+
   "liens-sans-intitule": {
     "titre": "Certains de vos liens n'ont pas d'intitulé",
     "constat": "{elements} liens sans texte exploitable.",

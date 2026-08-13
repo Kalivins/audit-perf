@@ -140,6 +140,9 @@ export const RULES = {
   'coordonnees-non-declarees': { tier: A, poids: 72, effort: FAIBLE, theme: 'contenu' },
   'horaires-non-declares': { tier: A, poids: 71, effort: FAIBLE, theme: 'contenu' },
   'champs-sans-etiquette': { tier: A, poids: 68, effort: MOYEN, theme: 'contenu' },
+  // Effort MOYEN et non FAIBLE : agrandir une cible sans decaler la mise en
+  // page demande de reprendre l'espacement autour, pas de changer une valeur.
+  'cibles-tactiles-trop-petites': { tier: A, poids: 67, effort: MOYEN, theme: 'contenu' },
   'liens-sans-intitule': { tier: A, poids: 64, effort: FAIBLE, theme: 'contenu' },
   'boutons-sans-intitule': { tier: A, poids: 62, effort: FAIBLE, theme: 'contenu' },
   'images-sans-dimensions': { tier: A, poids: 60, effort: FAIBLE, theme: 'performance' },

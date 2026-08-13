@@ -43,6 +43,18 @@ const AUDIT_MAP = {
   label: 'champs-sans-etiquette',
   'html-has-lang': 'langue-non-declaree',
   'meta-viewport': 'zoom-bloque',
+  // WCAG 2.2, critere 2.5.8 « Target Size (Minimum) », niveau AA : 24 px.
+  //
+  // Presque personne ne le verifie. L'ancien audit `tap-targets` du volet SEO,
+  // qui reclamait 48 px, a ete retire de Lighthouse ; celui-ci s'appuie sur
+  // axe-core et mesure le critere de conformite reel, plus bas et opposable.
+  // Les outils qui reprochent encore 48 px citent une recommandation de
+  // confort en la faisant passer pour une norme.
+  //
+  // Il ne rend un score que sur la strategie mobile : sur un profil de bureau
+  // la souris rend le critere sans objet, et axe-core le marque non applicable.
+  // Le filtre `score == null` plus bas ecarte donc le cas de lui-meme.
+  'target-size': 'cibles-tactiles-trop-petites',
 
   // Referencement
   'is-crawlable': 'indexation-bloquee',
