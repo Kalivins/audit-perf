@@ -33,6 +33,17 @@ const CHROME_FLAGS = [
   '--disable-background-networking',
   '--disable-sync',
   '--mute-audio',
+  // Des drapeaux supplementaires, quand l'environnement l'exige.
+  //
+  // Dans un conteneur, le bac a sable de Chrome reclame des espaces de noms
+  // utilisateur que le profil seccomp de Docker interdit par defaut. Chrome
+  // refuse alors de demarrer, et le message ne dit pas pourquoi. La reponse
+  // habituelle est --no-sandbox, acceptable ici parce que la mesure tourne sur
+  // une machine dediee et ne visite que des sites publics.
+  //
+  // Passer par une variable evite de graver ce choix dans le code : le poste
+  // de travail garde son bac a sable, le conteneur ajoute ce qu'il lui faut.
+  ...(process.env.CHROME_FLAGS_SUP ?? '').split(/\s+/).filter(Boolean),
 ];
 
 /**

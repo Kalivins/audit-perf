@@ -9,3 +9,10 @@ Thumbs.db
 prospects.csv
 prospects-*.csv
 !examples/*.csv
+
+# Les listes de cibles tirées d'un relevé : des noms et des adresses
+# d'entreprises réelles. Le dépôt est public, et une liste de sociétés auditées
+# publiée à côté de l'outil qui les a mesurées n'a pas à exister. Les chiffres
+# agrégés se publient, la liste nominative jamais.
+echantillon*.csv
+cibles*.csv

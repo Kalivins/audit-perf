@@ -24,6 +24,11 @@ const CHROME_FLAGS = [
   '--disable-extensions',
   '--disable-background-networking',
   '--mute-audio',
+  // Voir la note dans lighthouse.js : sous conteneur, le bac a sable de Chrome
+  // reclame des droits que Docker refuse par defaut. Ce module lance son propre
+  // Chrome, donc il lui faut la meme soupape. Sans elle, la campagne mesurerait
+  // la performance et ne releverait jamais un seul cookie, en silence.
+  ...(process.env.CHROME_FLAGS_SUP ?? '').split(/\s+/).filter(Boolean),
 ];
 
 /**

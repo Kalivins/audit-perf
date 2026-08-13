@@ -1,0 +1,20 @@
+# Ce qui n'a rien à faire dans l'image de mesure.
+#
+# out*/ pèse plusieurs centaines de mégaoctets de rapports et contient les noms,
+# les adresses et les mesures d'entreprises réelles. Copier ces dossiers dans
+# une couche graverait des données de prospection dans une image, où elles
+# resteraient même après suppression du dossier.
+out
+out-*
+rapports
+node_modules
+.git
+.gitignore
+*.log
+.env
+.env.*
+examples
+README.md
+LICENSE
+Dockerfile
+.dockerignore
